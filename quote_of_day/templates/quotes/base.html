@@ -1,0 +1,26 @@
+<!-- hw/templates/hw/base.html 
+ A template with common HTML code that will be re-used by 
+ all of the other templates.
+ -->
+<html>
+  <head>
+    <title>{% block title %}Daily Samuel Clemens Quote{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+  <body>
+    <header>
+      <h1>Daily Mark Twain Quote</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="{% url 'quote' %}">Samuel Clemens Quote of the Day</a>
+          </li>
+          <li><a href="{% url 'show_all' %}">Show All Quotes</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+  </body>
+</html>
