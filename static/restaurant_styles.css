@@ -1,0 +1,101 @@
+/* Basic reset for margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and overall layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 20px;
+}
+
+/* Header styles */
+header {
+    background-color: #333; /* Dark background */
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Navigation styles */
+nav ul {
+    list-style: none;
+    padding: 0;
+    background-color: #444; /* Darker background for navigation */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px; /* Increased margin for better spacing */
+}
+
+nav ul li a {
+    color: #fff; /* White text color for links */
+    text-decoration: none;
+    padding: 5px 10px; /* Added padding for better click area */
+    border-radius: 5px; /* Rounded corners for links */
+}
+
+nav ul li a:hover {
+    background-color: #555; /* Darker background on hover */
+    text-decoration: none; /* No underline on hover */
+}
+
+/* Main content styles */
+main {
+    margin-top: 20px;
+}
+
+/* Blockquote styles */
+blockquote {
+    background: #fff;
+    border-left: 4px solid #333;
+    padding: 10px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Block quote text */
+blockquote p {
+    font-style: italic;
+}
+
+/* Image styling */
+img {
+    width: 300px; /* Standard width */
+    height: auto;
+    max-height: 400px; 
+    display: block;
+    margin: 10px auto;
+    object-fit: cover; 
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific size for images in show_all page */
+img.standard-size {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Style for all lists of quotes and images */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 20px;
+    color: #666;
+}

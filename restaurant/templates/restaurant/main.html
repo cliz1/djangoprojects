@@ -1,0 +1,21 @@
+<!-- restaurant/templates/restaurant/main.html -->
+{% extends 'restaurant/base.html' %} {% load static %}
+<!-- Load static files -->
+
+{% block content %}
+<div>
+  <h1>Welcome to the Flying Stone Canteen</h1>
+  <p>Location: 9071 High Noon Street, Panama City, FL</p>
+  <p>Hours of Operation:</p>
+  <ul>
+    <li>Monday - Friday: 10 AM - 10 PM</li>
+    <li>Saturday - Sunday: 9 AM - 11 PM</li>
+  </ul>
+  <h2>Photos</h2>
+  <img
+    src="{% static 'images/output.jpg' %}"
+    alt="Restaurant Image"
+    style="max-width: 100%; height: auto; margin: 0 auto; display: block"
+  />
+</div>
+{% endblock %}
