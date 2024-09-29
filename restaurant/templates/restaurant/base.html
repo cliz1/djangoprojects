@@ -1,0 +1,21 @@
+<!-- restaurant/templates/restaurant/base.html -->
+{% load static %}
+<html>
+  <head>
+    <title>Flying Stone Canteen</title>
+    <link rel="stylesheet" href="{% static 'restaurant_styles.css' %}" />
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="{% url 'main' %}">Home</a></li>
+        <li><a href="{% url 'order' %}">Order</a></li>
+      </ul>
+    </nav>
+
+    {% block content %}
+    <!-- fill in this section with specific page detail -->
+    {% endblock %}
+  </body>
+</html>
