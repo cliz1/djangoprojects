@@ -1,0 +1,13 @@
+<h1>Show All Articles</h1>
+
+{{articles}}
+
+<div>
+  {% for a in articles}
+  <div>
+    <h2>{{a.title}}</h2>
+    <h3>by {{a.author}} at {{a.published}}</h3>
+    <p>{{a.text}}</p>
+  </div>
+  {% endfor %}
+</div>
