@@ -4,8 +4,9 @@
 from django.urls import path
 from django.conf import settings
 from . import views
-
-# all of the URLs that are part of this app
+from .views import ShowAllProfilesView # our view class definition 
 urlpatterns = [
-    
+    # map the URL (empty string) to the view
+    path('', ShowAllProfilesView.as_view(), name='show_all_profiles'), # generic class-based view
 ]
+

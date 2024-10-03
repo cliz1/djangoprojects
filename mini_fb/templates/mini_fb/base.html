@@ -1,0 +1,30 @@
+<!-- mini_fb/templates/mini_fb/base.html -->
+{% load static %}
+<html>
+  <head>
+    <title>Mini Facebook</title>
+    <link rel="stylesheet" href="{% static 'styles-mini_fb.css' %}" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Mini Facebook</h1>
+      <nav>
+        <ul>
+          <li><a href="{% url 'show_all_profiles' %}">Home</a></li>
+          <!-- Add more links as needed -->
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      {% block content %}
+      <!-- fill in this section with specific page detail -->
+      {% endblock %}
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Mini Facebook. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
