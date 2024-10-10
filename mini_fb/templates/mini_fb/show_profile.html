@@ -1,0 +1,43 @@
+{% extends 'mini_fb/base.html' %} {% block content %}
+<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
+
+<main class="grid-container">
+  <article class="profile-details">
+    <!-- Profile Image -->
+    <img
+      class="profile-image-large"
+      src="{{ profile.profile_image_url }}"
+      alt="Profile image of {{ profile.first_name }} {{ profile.last_name }}"
+    />
+
+    <div>
+      <!-- Profile Details -->
+      <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
+      <h3>City: {{ profile.city }}</h3>
+      <h3>
+        Email:
+        <a href="mailto:{{ profile.email_address }}"
+          >{{ profile.email_address }}</a
+        >
+      </h3>
+    </div>
+  </article>
+
+  <!-- Display Status Messages -->
+  <section class="status-messages">
+    <h2>Status Messages</h2>
+    {% if profile.get_status_messages %}
+    <ul>
+      {% for message in profile.get_status_messages %}
+      <li>
+        <strong>{{ message.timestamp|date:"F j, Y, g:i a" }}:</strong>
+        {{ message.message }}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No status messages available.</p>
+    {% endif %}
+  </section>
+</main>
+{% endblock %}
