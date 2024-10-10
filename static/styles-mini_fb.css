@@ -109,3 +109,41 @@ footer p {
     margin: 0;
     font-size: 0.9em;
 }
+
+/* Style for larger profile image */
+.profile-image-large {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+/* Profile details styling */
+.profile-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Styling for profile heading and details */
+.profile-details h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.profile-details h3 {
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Main container layout for profile */
+main.grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}

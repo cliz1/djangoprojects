@@ -1,30 +1,25 @@
 <!-- mini_fb/templates/mini_fb/show_all.html -->
-{% extends 'mini_fb/base.html' %}
-
-<!-- display a context variable called articles -->
-<!-- {{articles}}  -->
-
-{% block content %}
+{% extends 'mini_fb/base.html' %} {% block content %}
 <h1>Show all Profiles</h1>
 
 <main class="grid-container">
-  <!-- was <div> -->
-  <!-- loop to display each Article -->
+  <!-- Loop to display each profile -->
   {% for a in profiles %}
   <article>
-    <!-- was <div> -->
-
-    <!-- new: display the image URL stored in database -->
-    <img src="{{a.profile_image_url}}" alt="{{a.profile_image_url}}" />
+    <!-- Link the image to the user's profile page -->
+    <a href="{% url 'show_profile' a.pk %}">
+      <img src="{{a.profile_image_url}}" alt="{{a.profile_image_url}}" />
+    </a>
 
     <div>
-      <!-- NEW -->
-      <h2>{{a.first_name}} {{a.last_name}}, {{a.city}}</h2>
+      <!-- Link the name to the user's profile page -->
+      <h2>
+        <a href="{% url 'show_profile' a.pk %}">
+          {{a.first_name}} {{a.last_name}}</a
+        >, {{a.city}}
+      </h2>
     </div>
-    <!-- NEW -->
   </article>
-  <!-- was </div> -->
   {% endfor %}
 </main>
-<!-- was </div> -->
 {% endblock %}
