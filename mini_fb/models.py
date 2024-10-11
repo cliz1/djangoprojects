@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -18,6 +19,9 @@ class Profile(models.Model):
     def get_status_messages(self):
         # Assuming StatusMessage has a ForeignKey to Profile
         return StatusMessage.objects.filter(profile=self).order_by('-timestamp')
+    
+    def get_absolute_url(self):
+        return reverse('show_profile', kwargs={'pk': self.pk})
 
 class StatusMessage(models.Model):
     '''Encapsulate the idea of a Status Message.'''
