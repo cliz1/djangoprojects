@@ -23,6 +23,13 @@
     </div>
   </article>
 
+  <!-- Link to create a new status message -->
+  <div class="create-status-link">
+    <h3>
+      <a href="{% url 'create_status' profile.pk %}">Create a Status Message</a>
+    </h3>
+  </div>
+
   <!-- Display Status Messages -->
   <section class="status-messages">
     <h2>Status Messages</h2>
