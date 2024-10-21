@@ -38,7 +38,7 @@ nav ul {
 
 nav ul li {
     display: inline-block;
-    margin: 0 15px; /* Increased margin for better spacing */
+    margin: 0 15px; 
 }
 
 nav ul li a {
@@ -146,4 +146,15 @@ main.grid-container {
     justify-content: center;
     align-items: center;
     margin-top: 40px;
+}
+
+.status-message {
+    background-color: #e0e0e0;  
+    border-radius: 8px;         
+    padding: 10px;            
+    margin: 10px 0;            
+}
+
+.status-message .buttons {
+    margin-top: 5px;         
 }

@@ -15,5 +15,10 @@ urlpatterns = [
     #url pattern for creating a status
     path('profile/<int:pk>/create_status/', CreateStatusMessageView.as_view(), name='create_status'),
     #url pattern for updating a profile 
-    path("profile/<int:pk>/update/", UpdateProfileView.as_view(), name='update_profile'),  # New URL mapping
+    path("profile/<int:pk>/update/", UpdateProfileView.as_view(), name='update_profile'),  
+    #url pattern for deleting a statusmessage 
+    path("status/<int:pk>/delete/", DeleteStatusMessageView.as_view(), name='delete_status_message'), 
+    #url pattern for updating a statusmessage 
+    path("status/<int:pk>/update/", UpdateStatusMessageView.as_view(), name='update_status')
+
 ]
