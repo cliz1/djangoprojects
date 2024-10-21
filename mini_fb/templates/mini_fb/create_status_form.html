@@ -2,12 +2,18 @@
 <h1>Create a New Status Message</h1>
 
 <!-- Define the form with method POST and specify the action URL -->
-<form method="POST" action="{% url 'create_status' profile.pk %}">
+<form
+  method="POST"
+  action="{% url 'create_status' profile.pk %}"
+  enctype="multipart/form-data"
+>
   {% csrf_token %}
 
   <!-- Simple way to display the form, all one line -->
   {{ form.message }}
 
+  <label for="files">Upload Image(s):</label>
+  <input type="file" name="files" multiple />
   <!-- Each field on its own line -->
   <!-- {{ form.as_p }} -->
 

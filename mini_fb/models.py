@@ -9,7 +9,8 @@ class Profile(models.Model):
     last_name = models.TextField(blank=False)
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
-    profile_image_url = models.URLField(blank=True)
+    #profile_image_url = models.URLField(blank=True)
+    image_file = models.ImageField(blank=True) # an actual image
 
     def __str__(self):
         '''Return a string representation of this object.'''
@@ -23,6 +24,7 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse('show_profile', kwargs={'pk': self.pk})
 
+
 class StatusMessage(models.Model):
     '''Encapsulate the idea of a Status Message.'''
     
@@ -34,4 +36,18 @@ class StatusMessage(models.Model):
     def __str__(self):
         '''Return a string representation of this Status Message object.'''
         return f'{self.message}'
-       
+    
+    def get_images(self):
+        '''Return all Images associated with this StatusMessage.'''
+        return Image.objects.filter(status_message=self)
+
+class Image(models.Model):
+    '''Encapsulate the idea of an Image related to a Status Message.'''
+    
+    status_message = models.ForeignKey(StatusMessage, on_delete=models.CASCADE)
+    image_file = models.ImageField(upload_to='media/')
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a string representation of this Image object.'''
+        return f'Image for StatusMessage {self.status_message.id}'

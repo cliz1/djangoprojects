@@ -8,7 +8,7 @@
   <article>
     <!-- Link the image to the user's profile page -->
     <a href="{% url 'show_profile' a.pk %}">
-      <img src="{{a.profile_image_url}}" alt="{{a.profile_image_url}}" />
+      <img src="{{a.image_file.url}}" alt="{{a.profile_image_url}}" />
     </a>
 
     <div>
