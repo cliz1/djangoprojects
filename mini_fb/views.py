@@ -4,8 +4,8 @@
 from django.shortcuts import render
 from django.urls import reverse
 from typing import Any
-from .models import Profile, Image
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from .models import Profile, Image, StatusMessage
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 
 class UpdateProfileView(UpdateView):
@@ -78,7 +78,7 @@ class CreateStatusMessageView(CreateView):
         profile = Profile.objects.get(pk=self.kwargs['pk'])
 
         # attach this Profile to the instance of the StatusMessage to set its FK
-        form.instance.profile = profile  # like: status_message.profile = profile
+        form.instance.profile = profile
 
         sm = form.save()
 
@@ -91,3 +91,28 @@ class CreateStatusMessageView(CreateView):
 
         # delegate work to superclass version of this method
         return super().form_valid(form)
+
+class DeleteStatusMessageView(DeleteView):
+    '''A view to delete a Status Message for a Profile.'''
+
+    model = StatusMessage
+    template_name = "mini_fb/delete_status_form.html"
+    context_object_name = 'status_message'
+
+    def get_success_url(self):
+        '''Return the URL to redirect to on success.'''
+        # Get the profile related to the status message being deleted
+        #profile = Profile.objects.get(pk=self.kwargs['pk'])
+        return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
+    
+class UpdateStatusMessageView(UpdateView):
+    model = StatusMessage
+    template_name = "mini_fb/update_status_form.html"
+    context_object_name = 'status_message'
+    fields = ['message']  # Specify the fields to be updated
+
+    def get_success_url(self):
+        '''Return the URL to redirect to on success.'''
+        # Redirect to the profile page related to the status message being updated
+        return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
+

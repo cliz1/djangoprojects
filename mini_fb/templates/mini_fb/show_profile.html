@@ -45,6 +45,10 @@
       <li>
         <strong>{{ message.timestamp|date:"F j, Y, g:i a" }}:</strong>
         {{ message.message }}
+        <!--Delete link-->
+        <a href="{% url 'delete_status_message' message.pk %}">Delete</a>
+        <!--Update link-->
+        <a href="{% url 'update_status' message.pk %}">Update</a>
         <!-- Display associated images if any -->
         {% if message.get_images %}
         <div class="status-images">
