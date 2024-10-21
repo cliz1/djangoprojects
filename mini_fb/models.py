@@ -9,8 +9,8 @@ class Profile(models.Model):
     last_name = models.TextField(blank=False)
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
-    #profile_image_url = models.URLField(blank=True)
-    image_file = models.ImageField(blank=True) # an actual image
+    profile_image_url = models.URLField(blank=True)
+    #image_file = models.ImageField(blank=True) # an actual image
 
     def __str__(self):
         '''Return a string representation of this object.'''
