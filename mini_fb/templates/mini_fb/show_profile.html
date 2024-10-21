@@ -6,7 +6,7 @@
     <!-- Profile Image -->
     <img
       class="profile-image-large"
-      src="{{ profile.image_file.url }}"
+      src="{{ profile.profile_image_url }}"
       alt="Profile image of {{ profile.first_name }} {{ profile.last_name }}"
     />
 
@@ -19,6 +19,12 @@
         <a href="mailto:{{ profile.email_address }}"
           >{{ profile.email_address }}</a
         >
+      </h3>
+    </div>
+    <!-- Link to update profile -->
+    <div class="update-profile-link">
+      <h3>
+        <a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
       </h3>
     </div>
   </article>

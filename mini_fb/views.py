@@ -5,8 +5,20 @@ from django.shortcuts import render
 from django.urls import reverse
 from typing import Any
 from .models import Profile, Image
-from django.views.generic import ListView, DetailView, CreateView
-from .forms import CreateProfileForm, CreateStatusMessageForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
+
+class UpdateProfileView(UpdateView):
+    '''A view to update a Profile.'''
+    
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = 'mini_fb/update_profile_form.html'
+
+    def get_success_url(self):
+        '''Return the URL to redirect to after successfully updating the profile.'''
+        # Redirect back to the updated profile's page
+        return reverse('show_profile', kwargs={'pk': self.object.pk})
 
 class ShowAllProfilesView(ListView):
     '''Create a subclass of ListView to display all mini_fb Profiles.'''
