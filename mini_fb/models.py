@@ -45,7 +45,7 @@ class Image(models.Model):
     '''Encapsulate the idea of an Image related to a Status Message.'''
     
     status_message = models.ForeignKey(StatusMessage, on_delete=models.CASCADE)
-    image_file = models.ImageField(upload_to='media/')
+    image_file = models.ImageField(upload_to='images/')
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
