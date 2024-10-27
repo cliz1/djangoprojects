@@ -27,6 +27,16 @@
         <a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
       </h3>
     </div>
+    <!-- Link to Friend Suggestions -->
+    <div class="friend-suggestions-link">
+      <h3>
+        <a href="{% url 'friend_suggestions' profile.pk %}"
+          >View Friend Suggestions</a
+        >
+      </h3>
+    </div>
+    <!--Link to news feed-->
+    <a href="{% url 'show_news_feed' profile.pk %}">View News Feed</a>
   </article>
 
   <!-- Link to create a new status message -->
@@ -85,13 +95,5 @@
     <p>This profile has no friends yet.</p>
     {% endif %}
   </section>
-  <!-- Link to Friend Suggestions -->
-  <div class="friend-suggestions-link">
-    <h3>
-      <a href="{% url 'friend_suggestions' profile.pk %}"
-        >View Friend Suggestions</a
-      >
-    </h3>
-  </div>
 </main>
 {% endblock %}

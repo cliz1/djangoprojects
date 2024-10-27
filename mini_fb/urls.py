@@ -23,6 +23,8 @@ urlpatterns = [
     #url pattern for adding a friendship
     path('profile/<int:pk>/add_friend/<int:other_pk>/', CreateFriendView.as_view(), name='add_friend'),
     #url pattern for showing friend suggestions
-    path('profile/<int:pk>/friend_suggestions/', ShowFriendSuggestionsView.as_view(), name='friend_suggestions')
+    path('profile/<int:pk>/friend_suggestions/', ShowFriendSuggestionsView.as_view(), name='friend_suggestions'),
+    #url pattern for showing a profile's news feed
+    path('profile/<int:pk>/news_feed/', ShowNewsFeedView.as_view(), name='show_news_feed')
 
 ]

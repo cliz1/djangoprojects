@@ -65,6 +65,30 @@ class Profile(models.Model):
         suggestions = profiles.exclude(pk__in=friend_ids)
 
         return suggestions
+    
+    def get_news_feed(self):
+        # get the list of friends
+        friend_ids = Friend.objects.filter(
+            Q(profile1=self) | Q(profile2=self)
+        ).values_list('profile1', 'profile2')
+
+        # flatten the list of friend IDs into a single list
+        friends = set()
+        for profile1, profile2 in friend_ids:
+            if profile1 != self.pk:
+                friends.add(profile1)
+            if profile2 != self.pk:
+                friends.add(profile2)
+
+        # Add self to the list of profiles to fetch messages from
+        friends.add(self.pk)
+
+        # Get all status messages for the profile and its friends
+        status_messages = StatusMessage.objects.filter(
+            profile__in=friends
+        ).order_by('-timestamp')  # Most recent first
+
+        return status_messages
 
 
 class StatusMessage(models.Model):
