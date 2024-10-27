@@ -19,6 +19,10 @@ urlpatterns = [
     #url pattern for deleting a statusmessage 
     path("status/<int:pk>/delete/", DeleteStatusMessageView.as_view(), name='delete_status_message'), 
     #url pattern for updating a statusmessage 
-    path("status/<int:pk>/update/", UpdateStatusMessageView.as_view(), name='update_status')
+    path("status/<int:pk>/update/", UpdateStatusMessageView.as_view(), name='update_status'),
+    #url pattern for adding a friendship
+    path('profile/<int:pk>/add_friend/<int:other_pk>/', CreateFriendView.as_view(), name='add_friend'),
+    #url pattern for showing friend suggestions
+    path('profile/<int:pk>/friend_suggestions/', ShowFriendSuggestionsView.as_view(), name='friend_suggestions')
 
 ]

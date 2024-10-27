@@ -1,11 +1,11 @@
 # Create your views here.
 
 #from django.shortcuts import render
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from typing import Any
 from .models import Profile, Image, StatusMessage
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 
 class UpdateProfileView(UpdateView):
@@ -101,7 +101,7 @@ class DeleteStatusMessageView(DeleteView):
 
     def get_success_url(self):
         '''Return the URL to redirect to on success.'''
-        # Get the profile related to the status message being deleted
+        # get the profile related to the status message being deleted
         #profile = Profile.objects.get(pk=self.kwargs['pk'])
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
     
@@ -116,3 +116,29 @@ class UpdateStatusMessageView(UpdateView):
         # Redirect to the profile page related to the status message being updated
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
 
+class CreateFriendView(View):
+    def dispatch(self, request, *args, **kwargs):
+        # get the primary keys from the URL parameters
+        pk = self.kwargs['pk']
+        other_pk = self.kwargs['other_pk']
+
+         # retrieve the profiles
+        profile = get_object_or_404(Profile, pk=pk)
+        other_profile = get_object_or_404(Profile, pk=other_pk)
+
+        # add the friend if they aren’t already friends
+        profile.add_friend(other_profile)
+
+        # redirect back to the profile page
+        return redirect('show_profile', pk=pk)
+
+class ShowFriendSuggestionsView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.object 
+        context['suggestions'] = profile.get_friend_suggestions() 
+        return context
