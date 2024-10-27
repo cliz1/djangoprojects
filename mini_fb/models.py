@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models import Q
+from django.utils import timezone
 
 # Create your models here.
 
@@ -23,6 +25,46 @@ class Profile(models.Model):
     
     def get_absolute_url(self):
         return reverse('show_profile', kwargs={'pk': self.pk})
+    
+    def get_friends(self):
+        '''Return a list of Profile instances that are friends with this profile.'''
+        friends_as_profile1 = Friend.objects.filter(profile1=self).values_list('profile2', flat=True)
+        friends_as_profile2 = Friend.objects.filter(profile2=self).values_list('profile1', flat=True)
+        friend_ids = list(friends_as_profile1) + list(friends_as_profile2)
+        friends = Profile.objects.filter(id__in=friend_ids)
+        return list(friends)
+    
+    def add_friend(self, other):
+        '''method for adding a friend'''
+        if self == other:
+            return
+        # check if a Friend relationship already exists in either direction
+        friendship_exists = Friend.objects.filter(
+            (Q(profile1=self) & Q(profile2=other)) | (Q(profile1=other) & Q(profile2=self))
+        ).exists()
+
+        if not friendship_exists:
+            Friend.objects.create(profile1=self, profile2 = other, timestamp = timezone.now())
+    
+    def get_friend_suggestions(self):
+         # get all profiles except the current profile
+        profiles = Profile.objects.exclude(pk=self.pk)
+
+        # get profiles that are friends with this profile
+        friends = Friend.objects.filter(
+            Q(profile1=self) | Q(profile2=self)
+        ).values_list('profile1', 'profile2')
+
+        # flatten the list of friends into a single list of Profile IDs
+        friend_ids = set()
+        for profile1, profile2 in friends:
+            friend_ids.add(profile1)
+            friend_ids.add(profile2)
+
+        # exclude the friends from the profiles queryset
+        suggestions = profiles.exclude(pk__in=friend_ids)
+
+        return suggestions
 
 
 class StatusMessage(models.Model):
@@ -51,3 +93,14 @@ class Image(models.Model):
     def __str__(self):
         '''Return a string representation of this Image object.'''
         return f'Image for StatusMessage {self.status_message.id}'
+
+
+class Friend(models.Model):
+    '''Encapsulates the idea of a Friend or and edge between two Profile nodes'''
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile1")
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile2")
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a string representation of this Friend relationship.'''
+        return f'{self.profile1} & {self.profile2}'

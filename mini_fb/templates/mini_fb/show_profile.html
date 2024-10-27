@@ -68,5 +68,30 @@
     <p>No status messages available.</p>
     {% endif %}
   </section>
+  <!--display all friend profiles-->
+  <section class="friends-list">
+    <h2>Friends</h2>
+    {% if profile.get_friends %}
+    <ul>
+      {% for friend in profile.get_friends %}
+      <li>
+        <a href="{% url 'show_profile' friend.pk %}"
+          >{{ friend.first_name }} {{ friend.last_name }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>This profile has no friends yet.</p>
+    {% endif %}
+  </section>
+  <!-- Link to Friend Suggestions -->
+  <div class="friend-suggestions-link">
+    <h3>
+      <a href="{% url 'friend_suggestions' profile.pk %}"
+        >View Friend Suggestions</a
+      >
+    </h3>
+  </div>
 </main>
 {% endblock %}
