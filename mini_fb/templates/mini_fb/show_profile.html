@@ -21,30 +21,36 @@
         >
       </h3>
     </div>
+
+    <!-- Links visible only to the associated User -->
+    {% if request.user.is_authenticated and request.user == profile.user %}
     <!-- Link to update profile -->
     <div class="update-profile-link">
       <h3>
-        <a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
+        <a href="{% url 'update_profile' %}">Update Profile</a>
       </h3>
     </div>
+
     <!-- Link to Friend Suggestions -->
     <div class="friend-suggestions-link">
       <h3>
-        <a href="{% url 'friend_suggestions' profile.pk %}"
-          >View Friend Suggestions</a
-        >
+        <a href="{% url 'friend_suggestions' %}">View Friend Suggestions</a>
       </h3>
     </div>
-    <!--Link to news feed-->
-    <a href="{% url 'show_news_feed' profile.pk %}">View News Feed</a>
-  </article>
 
-  <!-- Link to create a new status message -->
-  <div class="create-status-link">
-    <h3>
-      <a href="{% url 'create_status' profile.pk %}">Create a Status Message</a>
-    </h3>
-  </div>
+    <!-- Link to create a new status message -->
+    <div class="create-status-link">
+      <h3>
+        <a href="{% url 'create_status' %}">Create a Status Message</a>
+      </h3>
+    </div>
+    {% endif %}
+
+    <!-- Link to news feed (not to everyone) -->
+    {% if request.user.is_authenticated and request.user == profile.user %}
+    <a href="{% url 'show_news_feed' %}">View News Feed</a>
+    {% endif %}
+  </article>
 
   <!-- Display Status Messages -->
   <section class="status-messages">
@@ -54,11 +60,13 @@
       {% for message in profile.get_status_messages %}
       <li>
         <strong>{{ message.timestamp|date:"F j, Y, g:i a" }}:</strong>
-        {{ message.message }}
-        <!--Delete link-->
-        <a href="{% url 'delete_status_message' message.pk %}">Delete</a>
-        <!--Update link-->
+        {{message.message}}
+        <!-- Only show delete and update links if the user is authenticated and is the owner of the profile -->
+        {% if request.user.is_authenticated and request.user == profile.user %}
+        <a href="{% url 'delete_status_message' message.pk  %}">Delete</a>
         <a href="{% url 'update_status' message.pk %}">Update</a>
+        {% endif %}
+
         <!-- Display associated images if any -->
         {% if message.get_images %}
         <div class="status-images">
@@ -78,7 +86,8 @@
     <p>No status messages available.</p>
     {% endif %}
   </section>
-  <!--display all friend profiles-->
+
+  <!-- Display all friend profiles -->
   <section class="friends-list">
     <h2>Friends</h2>
     {% if profile.get_friends %}

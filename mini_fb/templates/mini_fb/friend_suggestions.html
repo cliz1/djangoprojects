@@ -7,7 +7,7 @@
     {% for suggestion in suggestions %}
     <li>
       {{ suggestion.first_name }} {{ suggestion.last_name }}
-      <a href="{% url 'add_friend' profile.pk suggestion.pk %}">Add Friend</a>
+      <a href="{% url 'add_friend' suggestion.pk %}">Add Friend</a>
     </li>
     {% empty %}
     <li>No friend suggestions available.</li>
