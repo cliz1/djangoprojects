@@ -52,10 +52,35 @@ class CreateProfileView(CreateView):
     template_name = 'mini_fb/create_profile_form.html' 
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        # Reconstruct the UserCreationForm with POST data
+        user_form = UserCreationForm(self.request.POST)
+
+        if user_form.is_valid():
+            user = user_form.save()
+
+            # Attach the user to the Profile instance
+            profile = form.save(commit=False)  
+            profile.user = user  # Associate the new user with the profile
+            profile.save()  
+
+            return super().form_valid(form)
+
+        # If the UserCreationForm is invalid, re-render the form with errors
+        context = self.get_context_data(form=form)
+        context['user_form'] = user_form  
+        return self.render_to_response(context)
     
     def get_success_url(self):
         return reverse('show_all_profiles')
+    
+    def get_context_data(self, **kwargs):
+        # Call the superclass version to get the context
+        context = super().get_context_data(**kwargs)
+        
+        # Create an instance of UserCreationForm and add it to the context
+        context['user_form'] = UserCreationForm()
+        
+        return context
 
 class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     '''

@@ -4,6 +4,29 @@
 <form method="POST" novalidate>
   {% csrf_token %}
 
+  <!-- User Creation Form Fields -->
+  <div class="form-group">
+    <label for="id_username">Username:</label>
+    {{ user_form.username }} {% if user_form.username.errors %}
+    <div class="error">{{ user_form.username.errors }}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="id_password1">Password:</label>
+    {{ user_form.password1 }} {% if user_form.password1.errors %}
+    <div class="error">{{ user_form.password1.errors }}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="id_password2">Confirm Password:</label>
+    {{ user_form.password2 }} {% if user_form.password2.errors %}
+    <div class="error">{{ user_form.password2.errors }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Profile Creation Form Fields -->
   <div class="form-group">
     <label for="id_first_name">First Name:</label>
     {{ form.first_name }} {% if form.first_name.errors %}
