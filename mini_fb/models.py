@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db.models import Q
 from django.utils import timezone
@@ -12,6 +13,7 @@ class Profile(models.Model):
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
     profile_image_url = models.URLField(blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     #image_file = models.ImageField(blank=True) # an actual image
 
     def __str__(self):

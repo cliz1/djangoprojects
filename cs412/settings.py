@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-eu1^&84hpbu&qk+af7z!&_ps1h^dwdddf=apzjt33r-+hn$5+p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["https://twain-quotes-6f7db3879a82.herokuapp.com/", '127.0.0.1', "theflyingstonecanteen-45ffd096eafa.herokuapp.com"]
 
@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mini_fb.context_processors.add_profile',
             ],
         },
     },

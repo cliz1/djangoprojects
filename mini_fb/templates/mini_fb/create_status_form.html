@@ -4,7 +4,7 @@
 <!-- Define the form with method POST and specify the action URL -->
 <form
   method="POST"
-  action="{% url 'create_status' profile.pk %}"
+  action="{% url 'create_status' %}"
   enctype="multipart/form-data"
 >
   {% csrf_token %}
