@@ -14,7 +14,7 @@ urlpatterns = [
     #url pattern for creating a profile
     path('create_profile/', CreateProfileView.as_view(), name='create_profile'),
     #url pattern for creating a status
-    path('profile/create_status/', CreateStatusMessageView.as_view(), name='create_status'),
+    path('status/create_status/', CreateStatusMessageView.as_view(), name='create_status'),
     #url pattern for updating a profile 
     path("profile/update/", UpdateProfileView.as_view(), name='update_profile'),  
     #url pattern for deleting a statusmessage 
