@@ -56,11 +56,11 @@ def load_data(file_path):
                     date_of_registration=datetime.strptime(row['Date of Registration'].strip(), "%Y-%m-%d").date(),
                     party_affiliation=party_affiliation,
                     precinct_number=row['Precinct Number'].strip(),
-                    v20state=row['v20state'].strip() == 'Y',
-                    v21town=row['v21town'].strip() == 'Y',
-                    v21primary=row['v21primary'].strip() == 'Y',
-                    v22general=row['v22general'].strip() == 'Y',
-                    v23town=row['v23town'].strip() == 'Y',
+                    v20state=row['v20state'].strip() == 'TRUE',
+                    v21town=row['v21town'].strip() == 'TRUE',
+                    v21primary=row['v21primary'].strip() == 'TRUE',
+                    v22general=row['v22general'].strip() == 'TRUE',
+                    v23town=row['v23town'].strip() == 'TRUE',
                     voter_score=int(row['voter_score'].strip())
                 )
                 voter.save()
