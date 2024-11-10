@@ -3,7 +3,7 @@ from .models import Voter
 from datetime import datetime
 
 PARTY_CHOICES = [
-        ('', 'Select Party'),  # Add this if you want an empty choice
+        ('', 'Select Party'), 
         ('Democratic', 'Democratic'),
         ('Republican', 'Republican'),
         ('Constitution Party', 'Constitution Party'),
