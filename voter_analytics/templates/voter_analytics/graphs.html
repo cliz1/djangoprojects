@@ -1,0 +1,39 @@
+
+
+{% block content %}
+  <h1>Voter Data Graphs</h1>
+
+  <!-- Link to go back to Voter List -->
+  <p><a href="{% url 'voters' %}">Back to Voter List</a></p>
+
+  <!-- Filter Form -->
+  <form method="get">
+    <div>{{ form.party_affiliation.label_tag }} {{ form.party_affiliation }}</div>
+    <div>{{ form.min_date_of_birth.label_tag }} {{ form.min_date_of_birth }}</div>
+    <div>{{ form.max_date_of_birth.label_tag }} {{ form.max_date_of_birth }}</div>
+    <div>{{ form.voter_score.label_tag }} {{ form.voter_score }}</div>
+    <div>{{ form.elections.label_tag }} {{ form.elections }}</div>
+    <button type="submit">Filter</button>
+  </form>
+
+  <!-- Display the Graphs -->
+  <div class="graphs">
+    <!-- Birth Year Distribution Bar Chart -->
+    <div class="graph">
+      <h3>Distribution of Voters by Year of Birth</h3>
+      <div>{{ birth_year_graph|safe }}</div>
+    </div>
+
+    <!-- Party Affiliation Distribution Pie Chart -->
+    <div class="graph">
+      <h3>Distribution of Voters by Party Affiliation</h3>
+      <div>{{ party_affiliation_graph|safe }}</div>
+    </div>
+
+    <!-- Election Participation Bar Chart -->
+    <div class="graph">
+      <h3>Voter Participation in Elections</h3>
+      <div>{{ election_participation_graph|safe }}</div>
+    </div>
+  </div>
+{% endblock %}

@@ -2,7 +2,9 @@
 
 {% block content %}
   <h1>Voter Records</h1>
-
+  <p>
+    <a href="{% url 'graphs' %}">View Voter Data Graphs</a>
+  </p>
   <!-- Filter Form -->
   <form method="get">
     <div>{{ form.party_affiliation.label_tag }} {{ form.party_affiliation }}</div>
