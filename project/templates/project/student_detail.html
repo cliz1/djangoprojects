@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.first_name }} {{ student.last_name }} - Details</title>
+</head>
+<body>
+    <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+
+    <p><strong>Grade:</strong> {{ student.current_grade }}</p>
+    <p><strong>Town/Village:</strong> {{ student.town_village }}</p>
+    <p><strong>Country of Origin:</strong> {{ student.country_of_origin }}</p>
+    <p><strong>Parent:</strong> <a href="{% url 'parent_detail' student.parent.pk %}">{{ student.parent.first_name }} {{ student.parent.last_name }}</a></p>
+    <a href="{% url 'student_update' student.pk %}">
+        <button>Update Student Information</button>
+    </a>
+
+    <h2>Tutoring Sessions</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Date of Contact</th>
+                <th>Location</th>
+                <th>Session Focus</th>
+                <th>Activity</th>
+                <th>Length of Session</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in tutoring_sessions %}
+                <tr>
+                    <td>{{ session.date_of_contact }}</td>
+                    <td>{{ session.location_of_contact }}</td>
+                    <td>{{ session.session_focus }}</td>
+                    <td>{{ session.activity }}</td>
+                    <td>{{ session.length_of_session }} hours</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No tutoring sessions recorded for this student.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="addTutoringBtn">Add New Tutoring Service</button>
+
+    <!-- Hidden Tutoring Service Form -->
+    <div id="addTutoringForm" style="display: none;">
+        <form method="post" action="{% url 'add_tutoring_service' student.pk %}">
+            {% csrf_token %}
+            <input type="date" name="date_of_contact" id="tutoringDate" required><br>
+            <label for="location_of_contact">Location:</label>
+            <input type="text" name="location_of_contact" required><br>
+            <label for="session_focus">Focus:</label>
+            <input type="text" name="session_focus" required><br>
+            <label for="activity">Activity:</label>
+            <textarea name="activity" required></textarea><br>
+            <label for="length_of_session">Length (hours):</label>
+            <input type="number" name="length_of_session" step="0.1" required><br>
+            <button type="submit">Save</button>
+            <button type="button" class="cancelButton" data-form-id="addTutoringForm">Cancel</button>
+        </form>
+    </div>
+
+    <h2>Advocacy Sessions</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Date of Contact</th>
+                <th>Length of Contact</th>
+                <th>Description</th>
+                <th>School District</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in advocacy_sessions %}
+                <tr>
+                    <td>{{ session.date_of_contact }}</td>
+                    <td>{{ session.length_of_contact }} hours</td>
+                    <td>{{ session.description }}</td>
+                    <td>{{ session.school_district }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No advocacy sessions recorded for this student.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="addAdvocacyBtn">Add New Advocacy Service</button>
+    <!--Hidden form for advocacy services-->
+    <div id="addAdvocacyForm" style="display: none;">
+        <form method="post" action="{% url 'add_advocacy_service' student.pk %}">
+            {% csrf_token %}
+            <label for="date_of_contact">Date:</label>
+            <input type="date" name="date_of_contact" id="advocacyDate" required><br>
+            <label for="school_district">School District:</label>
+            <input type="text" name="school_district" required><br>
+            <label for="description">Description:</label>
+            <textarea name="description" required></textarea><br>
+            <label for="length_of_contact">Length (hours):</label>
+            <input type="number" name="length_of_contact" step="0.1" required><br>
+            <button type="submit">Save</button>
+            <button type="button" class="cancelButton" data-form-id="addAdvocacyForm">Cancel</button>
+        </form>
+<!-- JavaScript to toggle form visibility -->
+<script>
+    // Set default date to today
+    function setDefaultDate(inputId) {
+        const today = new Date();
+        const localDate = today.toLocaleDateString('en-CA');
+        document.getElementById(inputId).value = localDate;
+    }
+    //stuff needed for hidden forms
+    // Set default date when the forms are displayed
+    document.getElementById('addTutoringBtn').addEventListener('click', function () {
+        const form = document.getElementById('addTutoringForm');
+        if (form.style.display === 'none') {
+            setDefaultDate('tutoringDate');
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    });
+
+    document.getElementById('addAdvocacyBtn').addEventListener('click', function () {
+        const form = document.getElementById('addAdvocacyForm');
+        if (form.style.display === 'none') {
+            setDefaultDate('advocacyDate');
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    });
+
+    // Hide form on cancel
+    document.querySelectorAll('.cancelButton').forEach(button => {
+        button.addEventListener('click', function () {
+            const formId = this.getAttribute('data-form-id');
+            document.getElementById(formId).style.display = 'none';
+        });
+    });
+</script>
+    </div>
+
+    <br>
+    <a href="{% url 'student_search' %}">Back to Student Search</a>
+</body>
+</html>

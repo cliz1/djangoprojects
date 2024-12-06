@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+  </head>
+  <body>
+    <h1>Welcome to the App</h1>
+    <a href="{% url 'student_search' %}">Search Students</a>
+    <a href="{% url 'parent_search' %}">Search Parents</a>
+
+    <h2>Statistics</h2>
+
+    <!-- Number of Students by Town/Village -->
+    <h3>Number of Students by School District</h3>
+    <ul>
+      {% for item in students_by_town %}
+      <li>{{ item.town_village }}: {{ item.count }}</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Number of Students by Country of Origin -->
+    <h3>Number of Students by Country of Origin</h3>
+    <ul>
+      {% for item in students_by_country %}
+      <li>{{ item.country_of_origin }}: {{ item.count }}</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Number of Students by Current Grade -->
+    <h3>Number of Students by Current Grade</h3>
+    <ul>
+      {% for item in students_by_grade %}
+      <li>{{ item.current_grade }}: {{ item.count }}</li>
+      {% endfor %}
+    </ul>
+
+    <h3>Number of Parents by Town/Village</h3>
+    <ul>
+      {% for item in parents_by_town %}
+      <li>{{ item.town_village }}: {{ item.count }}</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Time Statistics -->
+    <h3>Number of Students Who Received Services</h3>
+    <ul>
+      <li>In the last 2 weeks: {{ students_in_last_two_weeks }}</li>
+      <li>In the last 6 months: {{ students_in_last_six_months }}</li>
+      <li>In the last 1 year: {{ students_in_last_year }}</li>
+    </ul>
+  </body>
+</html>

@@ -6,6 +6,7 @@ from django.utils import timezone
 
 # Create your models here.
 
+
 class Profile(models.Model):
     '''models the data atrributes of the mini FB profiles'''
     first_name = models.TextField(blank=False)

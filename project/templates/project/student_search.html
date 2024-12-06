@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Students</title>
+</head>
+<body>
+    <a href="{% url 'home' %}">Back to Home</a>
+    <h1>Search Students</h1>
+
+    <!-- Search and Filter Form -->
+    <form method="get">
+        {% csrf_token %}
+        
+        <!-- Render form fields -->
+        {{ form.as_p }}
+
+        <button type="submit">Search</button>
+    </form>
+
+    {% if request.GET.search_name or request.GET.town_village or request.GET.country_of_origin or request.GET.current_grade or request.GET.time_period %}
+        <h2>Results</h2>
+        <ul>
+            {% for student in students %}
+                <a href="{% url 'student_detail' student.pk %}">
+                    <li>{{ student.first_name }} {{ student.last_name }}</li>
+                </a>
+            {% empty %}
+                <li>No students found matching the search criteria.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
+
