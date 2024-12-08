@@ -16,6 +16,7 @@
         <button>Update Student Information</button>
     </a>
 
+    <!-- Tutoring Services Log -->
     <h2>Tutoring Sessions</h2>
     <table border="1">
         <thead>
@@ -28,7 +29,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for session in tutoring_sessions %}
+            {% for session in tutoring_sessions|slice:":5" %}
                 <tr>
                     <td>{{ session.date_of_contact }}</td>
                     <td>{{ session.location_of_contact }}</td>
@@ -43,6 +44,34 @@
             {% endfor %}
         </tbody>
     </table>
+    
+    {% if tutoring_sessions|length > 5 %}
+        <button id="expandTutoringLog" data-expanded="false">Show More</button>
+        <table id="additionalTutoringSessions" border="1" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Date of Contact</th>
+                    <th>Location</th>
+                    <th>Session Focus</th>
+                    <th>Activity</th>
+                    <th>Length of Session</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in tutoring_sessions|slice:"5:" %}
+                    <tr>
+                        <td>{{ session.date_of_contact }}</td>
+                        <td>{{ session.location_of_contact }}</td>
+                        <td>{{ session.session_focus }}</td>
+                        <td>{{ session.activity }}</td>
+                        <td>{{ session.length_of_session }} hours</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    
+    <!-- Advocacy Services Log (Optional Table Format) -->
     <button id="addTutoringBtn">Add New Tutoring Service</button>
 
     <!-- Hidden Tutoring Service Form -->
@@ -64,30 +93,54 @@
     </div>
 
     <h2>Advocacy Sessions</h2>
-    <table border="1">
+<table border="1">
+    <thead>
+        <tr>
+            <th>Date of Contact</th>
+            <th>School District</th>
+            <th>Length of Contact</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for session in advocacy_sessions|slice:":5" %}
+            <tr>
+                <td>{{ session.date_of_contact }}</td>
+                <td>{{ session.school_district }}</td>
+                <td>{{ session.length_of_contact }} hours</td>
+                <td>{{ session.description }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No advocacy sessions recorded for this student.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if advocacy_sessions|length > 5 %}
+    <button id="expandAdvocacyLog" data-expanded="false">Show More</button>
+    <table id="additionalAdvocacySessions" border="1" style="display: none;">
         <thead>
             <tr>
                 <th>Date of Contact</th>
+                <th>School District</th>
                 <th>Length of Contact</th>
                 <th>Description</th>
-                <th>School District</th>
             </tr>
         </thead>
         <tbody>
-            {% for session in advocacy_sessions %}
+            {% for session in advocacy_sessions|slice:"5:" %}
                 <tr>
                     <td>{{ session.date_of_contact }}</td>
+                    <td>{{ session.school_district }}</td>
                     <td>{{ session.length_of_contact }} hours</td>
                     <td>{{ session.description }}</td>
-                    <td>{{ session.school_district }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="4">No advocacy sessions recorded for this student.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+{% endif %}
     <button id="addAdvocacyBtn">Add New Advocacy Service</button>
     <!--Hidden form for advocacy services-->
     <div id="addAdvocacyForm" style="display: none;">
@@ -140,6 +193,21 @@
             const formId = this.getAttribute('data-form-id');
             document.getElementById(formId).style.display = 'none';
         });
+    });
+    // expand feature for service log
+    document.getElementById("expandTutoringLog").addEventListener("click", function () {
+        const table = document.getElementById("additionalTutoringSessions");
+        const expanded = this.getAttribute("data-expanded") === "true";
+        table.style.display = expanded ? "none" : "table";
+        this.textContent = expanded ? "Show More" : "Show Less";
+        this.setAttribute("data-expanded", !expanded);
+    });
+    document.getElementById("expandAdvocacyLog").addEventListener("click", function () {
+        const table = document.getElementById("additionalAdvocacySessions");
+        const expanded = this.getAttribute("data-expanded") === "true";
+        table.style.display = expanded ? "none" : "table";
+        this.textContent = expanded ? "Show More" : "Show Less";
+        this.setAttribute("data-expanded", !expanded);
     });
 </script>
     </div>

@@ -137,8 +137,8 @@ class StudentDetailView(DetailView):
 
         # Get the related tutoring and advocacy service logs
         student = self.get_object()
-        context['tutoring_sessions'] = student.tutoring_sessions.all()
-        context['advocacy_sessions'] = student.advocacy_sessions.all()
+        context['tutoring_sessions'] = student.tutoring_sessions.all().order_by('-date_of_contact')
+        context['advocacy_sessions'] = student.advocacy_sessions.all().order_by('-date_of_contact')
 
         return context
 
