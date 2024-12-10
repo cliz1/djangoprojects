@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service
+from django.contrib.auth import views as auth_views
+from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service, IntakeView, charts_view, DeleteServiceView
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
@@ -11,4 +12,9 @@ urlpatterns = [
     path('parent/<int:pk>/update/', ParentUpdateView.as_view(), name='parent_update'),
     path('student/<int:pk>/add_tutoring_service/', add_tutoring_service, name='add_tutoring_service'),
     path('student/<int:pk>/add_advocacy_service/', add_advocacy_service, name='add_advocacy_service'),
+    path("login/", auth_views.LoginView.as_view(template_name="project/login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path('intake/', IntakeView.as_view(), name='intake'),
+    path('charts/', charts_view, name='charts'),
+    path('delete_service/<int:pk>/', DeleteServiceView.as_view(), name='delete_service')
 ]

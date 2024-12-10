@@ -4,17 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ student.first_name }} {{ student.last_name }} - Details</title>
+    <a href="{% url 'student_search' %}">Back to Student Search</a>
+    <a href="{% url 'home' %}">Back to Home</a>
+     <!-- Link to my CSS file -->
+     {% load static %}
+     <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
+    <script type="text/javascript">
+        // JavaScript function to show a confirmation dialog
+        function confirmDeletion() {
+            // Display the confirmation dialog
+            return confirm("Are you sure you want to delete this service?");
+        }
+    </script>
 </head>
 <body>
+    <div class="container">
     <h1>{{ student.first_name }} {{ student.last_name }}</h1>
-
+    <p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
     <p><strong>Grade:</strong> {{ student.current_grade }}</p>
-    <p><strong>Town/Village:</strong> {{ student.town_village }}</p>
+    <p><strong>School District:</strong> {{ student.town_village }}</p>
     <p><strong>Country of Origin:</strong> {{ student.country_of_origin }}</p>
     <p><strong>Parent:</strong> <a href="{% url 'parent_detail' student.parent.pk %}">{{ student.parent.first_name }} {{ student.parent.last_name }}</a></p>
-    <a href="{% url 'student_update' student.pk %}">
-        <button>Update Student Information</button>
-    </a>
+    <!-- Display total hours for tutoring and advocacy -->
+<p><strong>Total Tutoring Hours:</strong> {{ tutoring_hours|floatformat:1 }} hours</p>
+<p><strong>Total Advocacy Hours:</strong> {{ advocacy_hours }} hours</p>
+    <!--UPDATE BUTTON-->
+     <!--Update Button-->
+     <div class="nav-links">
+        <a href="{% url 'student_update' student.pk %}" class="btn btn-secondary">Update Student Information</a>
+    </div>
 
     <!-- Tutoring Services Log -->
     <h2>Tutoring Sessions</h2>
@@ -26,6 +44,7 @@
                 <th>Session Focus</th>
                 <th>Activity</th>
                 <th>Length of Session</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +55,13 @@
                     <td>{{ session.session_focus }}</td>
                     <td>{{ session.activity }}</td>
                     <td>{{ session.length_of_session }} hours</td>
+                    <td>
+                        <!-- Delete button -->
+                        <form method="post" action="{% url 'delete_service' session.pk %}" onsubmit="return confirmDeletion()">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">🗑️</button>
+                        </form>
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
@@ -55,6 +81,7 @@
                     <th>Session Focus</th>
                     <th>Activity</th>
                     <th>Length of Session</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,17 +92,24 @@
                         <td>{{ session.session_focus }}</td>
                         <td>{{ session.activity }}</td>
                         <td>{{ session.length_of_session }} hours</td>
+                        <td>
+                            <!-- Delete button -->
+                            <form method="post" action="{% url 'delete_service' session.pk %}" onsubmit="return confirmDeletion()">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">🗑️</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% endif %}
     
-    <!-- Advocacy Services Log (Optional Table Format) -->
+    <!-- Advocacy Services Log -->
     <button id="addTutoringBtn">Add New Tutoring Service</button>
 
     <!-- Hidden Tutoring Service Form -->
-    <div id="addTutoringForm" style="display: none;">
+    <div id="addTutoringForm" style="display: none;" class="small-form">
         <form method="post" action="{% url 'add_tutoring_service' student.pk %}">
             {% csrf_token %}
             <input type="date" name="date_of_contact" id="tutoringDate" required><br>
@@ -100,6 +134,7 @@
             <th>School District</th>
             <th>Length of Contact</th>
             <th>Description</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -109,6 +144,13 @@
                 <td>{{ session.school_district }}</td>
                 <td>{{ session.length_of_contact }} hours</td>
                 <td>{{ session.description }}</td>
+                <td>
+                    <!-- Delete button -->
+                    <form method="post" action="{% url 'delete_service' session.pk %}" onsubmit="return confirmDeletion()">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">🗑️</button>
+                    </form>
+                </td>
             </tr>
         {% empty %}
             <tr>
@@ -127,6 +169,7 @@
                 <th>School District</th>
                 <th>Length of Contact</th>
                 <th>Description</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -136,6 +179,13 @@
                     <td>{{ session.school_district }}</td>
                     <td>{{ session.length_of_contact }} hours</td>
                     <td>{{ session.description }}</td>
+                    <td>
+                        <!-- Delete button -->
+                        <form method="post" action="{% url 'delete_service' session.pk %}" onsubmit="return confirmDeletion()">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">🗑️</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -143,7 +193,7 @@
 {% endif %}
     <button id="addAdvocacyBtn">Add New Advocacy Service</button>
     <!--Hidden form for advocacy services-->
-    <div id="addAdvocacyForm" style="display: none;">
+    <div id="addAdvocacyForm" style="display: none;" class="small-form">
         <form method="post" action="{% url 'add_advocacy_service' student.pk %}">
             {% csrf_token %}
             <label for="date_of_contact">Date:</label>
@@ -157,6 +207,7 @@
             <button type="submit">Save</button>
             <button type="button" class="cancelButton" data-form-id="addAdvocacyForm">Cancel</button>
         </form>
+    </div>
 <!-- JavaScript to toggle form visibility -->
 <script>
     // Set default date to today
@@ -213,6 +264,6 @@
     </div>
 
     <br>
-    <a href="{% url 'student_search' %}">Back to Student Search</a>
+
 </body>
 </html>

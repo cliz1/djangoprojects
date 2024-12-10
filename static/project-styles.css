@@ -1,0 +1,273 @@
+.errorlist {
+    display: none;
+}
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #2e2e2e; /* Dark background for the whole page */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    flex-direction: column; /* Stack items vertically */
+}
+
+/* Centered content window */
+.container {
+    background-color: #1c1c1c; /* Darker background for content */
+    width: 100%;
+    max-width: 1000px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    margin: 0 auto;
+
+}
+
+/* Header and Main Text */
+h1, h2, h3 {
+    color: #ffffff; /* White text for headers */
+    margin-bottom: 20px;
+}
+
+/* Paragraphs and general text */
+p {
+    color: #e0e0e0; /* Slightly lighter text for readability */
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Styling for lists and statistics */
+ul {
+    margin-bottom: 30px; /* Add margin after each list for better spacing */
+    list-style-type: none;
+    padding-left: 0;
+    flex: 1; /* Makes each list take up equal width */
+    min-width: 200px; /* Prevents lists from getting too narrow */
+}
+
+/* Links and Buttons */
+a, button {
+    background-color: #1d61b9; /* Navy blue for links/buttons */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    display: inline-block;
+}
+
+/* Ensure logout button stays in place */
+button.logout {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #c0392b; /* Red color for logout button */
+}
+
+a:hover, button:hover {
+    background-color: #165a8e; /* Darker navy blue on hover */
+}
+
+.stats-container {
+    display: flex; /* Enables Flexbox */
+    justify-content: space-between; /* Distributes the space evenly between items */
+    flex-wrap: wrap; /* Allows the lists to wrap to the next line if there's not enough space */
+    gap: 20px; /* Adds space between the lists */
+}
+
+/* Styling for individual lists within the container */
+.stat-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 30px;
+    flex: 1; /* Makes each list take up equal width */
+    min-width: 200px; /* Prevents lists from getting too narrow */
+}
+
+/* Adjust the width of individual lists if needed */
+ul.stat-list {
+    flex: 1 1 30%; /* Flex-grow, flex-shrink, and flex-basis */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adds space between form elements */
+    margin-bottom: 30px;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #1d3557;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #457b9d;
+}
+
+/* Optional: If you want to specifically target the address field */
+textarea[name="home_address"] {
+    width: 50%; /* Ensures it fits the container */
+    height: 50px;
+}
+
+
+/* Style for form input fields and text areas */
+input, textarea {
+    background-color: #333; /* Dark gray background */
+    color: #fff; /* White text */
+    border: 1px solid #555; /* Light border for contrast */
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Optional: Adding focus style to make input more visible when focused */
+input:focus, textarea:focus {
+    background-color: #444; /* Slightly lighter gray on focus */
+    border-color: #88c0d0; /* Light blue border color on focus */
+    outline: none; /* Removes the default focus outline */
+}
+
+
+/* Individual chart box styling */
+.chart {
+    flex: 1 1 calc(50% - 20px); /* Adjusts the chart box size */
+    min-width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #222;
+    padding: 10px;
+}
+
+
+/* Cancel Button for Forms */
+.cancelButton {
+    background-color: #e74c3c;
+    padding: 10px 15px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.cancelButton:hover {
+    background-color: #c0392b;
+}
+
+.cancelButton:disabled {
+    background-color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* Additional Styling for Expanding Tables */
+#expandTutoringLog, #expandAdvocacyLog {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#expandTutoringLog:hover, #expandAdvocacyLog:hover {
+    background-color: #2980b9;
+}
+
+#additionalTutoringSessions, #additionalAdvocacySessions {
+    margin-top: 20px;
+    display: none;
+}
+
+.small-form {
+    width: 50%; /* Reduced form width */
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #333; /* Dark background to match dark mode */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Soft shadow */
+    color: #fff; /* Light text color for readability */
+}
+
+/* Reduce space between form elements */
+.small-form input,
+.small-form select,
+.small-form textarea {
+    width: 100%;
+    padding: 5px 3px; /* Smaller padding */
+    margin: 1px 0; /* Reduced margin */
+    border: 1px solid #555; /* Darker border to fit dark theme */
+    border-radius: 4px;
+    background-color: #444; /* Slightly lighter dark background for inputs */
+    color: #fff; /* Light text color inside inputs */
+}
+
+.small-form button {
+    padding: 8px 16px;
+    margin: 1px 0;
+    background-color: #4CAF50; /* Green button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.small-form button:hover {
+    background-color: #45a049; /* Darken button on hover */
+}
+
+.small-form .cancelButton {
+    background-color: #f44336; /* Red cancel button */
+}
+
+.small-form .cancelButton:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+/* Style for labels */
+.small-form label {
+    font-size: 14px;
+    margin-bottom: 1px;
+    display: inline-block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    p {
+        font-size: 0.9rem;
+    }
+
+    table.service-table th, table.service-table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    form {
+        padding: 15px;
+    }
+}
