@@ -42,6 +42,12 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
         context["parents_by_town"] = (Parent.objects.values('town_village').annotate(count=Count('id')))
 
+        context["parents_by_country"] = (
+            Parent.objects.values("country_of_origin")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+        )
+
         ## STUFF FOR TIME FILTERING
         two_weeks_ago = today - timedelta(weeks=2)
         six_months_ago = today - timedelta(days=6*30)  # Approx. 6 months
@@ -75,7 +81,7 @@ class StudentSearchView(LoginRequiredMixin, ListView):
     model = Student
     template_name = "project/student_search.html"
     context_object_name = "students"
-    paginate_by = 10  # Limit the number of results per page (optional)
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = Student.objects.all()
@@ -108,7 +114,6 @@ class StudentSearchView(LoginRequiredMixin, ListView):
         if grade_filter:
             queryset = queryset.filter(current_grade=grade_filter)
 
-        # Time filters
         # Time period filter
         if time_period:
             today = now().date()
@@ -164,7 +169,7 @@ class ParentSearchView(LoginRequiredMixin, ListView):
     model = Parent
     template_name = "project/parent_search.html"
     context_object_name = "parents"
-    paginate_by = 10  # Limit the number of results per page (optional)
+    paginate_by = 10 
 
     def get_queryset(self):
         queryset = Parent.objects.all()
@@ -175,7 +180,7 @@ class ParentSearchView(LoginRequiredMixin, ListView):
 
         # Apply search by name (case-insensitive)
         if search_name:
-            name_parts = search_name.split()  # Split input into parts
+            name_parts = search_name.split()  # Splitting input into parts
             if len(name_parts) == 1:
                 queryset = queryset.filter(
                 Q(first_name__icontains=search_name) | Q(last_name__icontains=search_name)
@@ -253,7 +258,16 @@ class IntakeView(LoginRequiredMixin, View):
 class DeleteServiceView(LoginRequiredMixin, View):
     def post(self, request, pk):
         # Find the service by primary key
-        service = get_object_or_404(TutoringService, pk=pk)  # Replace with AdvocacyService if needed
+        service = get_object_or_404(TutoringService, pk=pk)  
+        # Delete the service
+        service.delete()
+        # Redirect back to the student's detail page
+        return redirect('student_detail', pk=service.student.pk)
+
+class DeleteAdvocacyServiceView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        # Find the service by primary key
+        service = get_object_or_404(AdvocacyService, pk=pk)  
         # Delete the service
         service.delete()
         # Redirect back to the student's detail page
@@ -299,7 +313,7 @@ def charts_view(request):
     if time_filter == '2weeks':
         start_date = today - timedelta(weeks=2)
     elif time_filter == '6months':
-        start_date = today - timedelta(days=6*30)  # Approximation for 6 months
+        start_date = today - timedelta(days=6*30)
     elif time_filter == '1year':
         start_date = today - timedelta(days=365)
     else:

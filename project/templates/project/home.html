@@ -77,6 +77,16 @@
           </ul>
         </div>
 
+         <!-- Number of Parents by Country of Origin -->
+         <div class="stat-list">
+            <h3>Country of Origin (Parents)</h3>
+            <ul>
+              {% for item in parents_by_country %}
+              <li>{{ item.country_of_origin }}: {{ item.count }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+
         <!-- Time Statistics -->
         <div class="stat-list">
           <h3>Students Who Received Services</h3>

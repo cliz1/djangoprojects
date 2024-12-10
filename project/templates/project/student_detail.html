@@ -29,7 +29,7 @@
 <p><strong>Total Tutoring Hours:</strong> {{ tutoring_hours|floatformat:1 }} hours</p>
 <p><strong>Total Advocacy Hours:</strong> {{ advocacy_hours }} hours</p>
     <!--UPDATE BUTTON-->
-     <!--Update Button-->
+
      <div class="nav-links">
         <a href="{% url 'student_update' student.pk %}" class="btn btn-secondary">Update Student Information</a>
     </div>
@@ -146,7 +146,7 @@
                 <td>{{ session.description }}</td>
                 <td>
                     <!-- Delete button -->
-                    <form method="post" action="{% url 'delete_service' session.pk %}" onsubmit="return confirmDeletion()">
+                    <form method="post" action="{% url 'delete_adv_service' session.pk %}" onsubmit="return confirmDeletion()">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">🗑️</button>
                     </form>
@@ -181,7 +181,7 @@
                     <td>{{ session.description }}</td>
                     <td>
                         <!-- Delete button -->
-                        <form method="post" action="{% url 'delete_service' session.pk %}" onsubmit="return confirmDeletion()">
+                        <form method="post" action="{% url 'delete_adv_service' session.pk %}" onsubmit="return confirmDeletion()">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">🗑️</button>
                         </form>
@@ -216,7 +216,7 @@
         const localDate = today.toLocaleDateString('en-CA');
         document.getElementById(inputId).value = localDate;
     }
-    //stuff needed for hidden forms
+    
     // Set default date when the forms are displayed
     document.getElementById('addTutoringBtn').addEventListener('click', function () {
         const form = document.getElementById('addTutoringForm');
