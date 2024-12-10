@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service, IntakeView, charts_view, DeleteServiceView
+from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service, IntakeView, charts_view, DeleteServiceView, DeleteAdvocacyServiceView
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
@@ -16,5 +16,7 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path('intake/', IntakeView.as_view(), name='intake'),
     path('charts/', charts_view, name='charts'),
-    path('delete_service/<int:pk>/', DeleteServiceView.as_view(), name='delete_service')
+    path('delete_service/<int:pk>/', DeleteServiceView.as_view(), name='delete_service'),
+    path('delete_adv_service/<int:pk>/', DeleteAdvocacyServiceView.as_view(), name='delete_adv_service'),
+
 ]
