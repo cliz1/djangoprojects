@@ -4,51 +4,89 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home Page</title>
+    <!-- Link to my CSS file -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
   </head>
   <body>
-    <h1>Welcome to the App</h1>
-    <a href="{% url 'student_search' %}">Search Students</a>
-    <a href="{% url 'parent_search' %}">Search Parents</a>
+    <div class="container">
+      <h1>NEDIS Client Database</h1>
 
-    <h2>Statistics</h2>
+      <!-- Logout Button -->
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+      </form>
 
-    <!-- Number of Students by Town/Village -->
-    <h3>Number of Students by School District</h3>
-    <ul>
-      {% for item in students_by_town %}
-      <li>{{ item.town_village }}: {{ item.count }}</li>
-      {% endfor %}
-    </ul>
+      <!-- Navigation Buttons -->
+      <div class="navigation">
+        <a href="{% url 'intake' %}" class="btn btn-primary">Intake</a>
+        <a href="{% url 'student_search' %}">Search Students</a>
+        <a href="{% url 'parent_search' %}">Search Parents</a>
+        <a href="{% url 'charts' %}">Charts</a>
+      </div>
 
-    <!-- Number of Students by Country of Origin -->
-    <h3>Number of Students by Country of Origin</h3>
-    <ul>
-      {% for item in students_by_country %}
-      <li>{{ item.country_of_origin }}: {{ item.count }}</li>
-      {% endfor %}
-    </ul>
+      <h2>Client Statistics</h2>
 
-    <!-- Number of Students by Current Grade -->
-    <h3>Number of Students by Current Grade</h3>
-    <ul>
-      {% for item in students_by_grade %}
-      <li>{{ item.current_grade }}: {{ item.count }}</li>
-      {% endfor %}
-    </ul>
+      <!-- Stats Container for flexible layout -->
+      <div class="stats-container">
+        <!-- Service Hours Stats -->
+        <div class="stat-list">
+          <h3>Service Hours</h3>
+          <p>{{ tutoring_hours|floatformat:1 }} Tutoring hours</p>
+          <p>{{ advocacy_hours }} Advocacy hours</p>
+        </div>
 
-    <h3>Number of Parents by Town/Village</h3>
-    <ul>
-      {% for item in parents_by_town %}
-      <li>{{ item.town_village }}: {{ item.count }}</li>
-      {% endfor %}
-    </ul>
+        <!-- Number of Students by Town/Village -->
+        <div class="stat-list">
+          <h3>School District</h3>
+          <ul>
+            {% for item in students_by_town %}
+            <li>{{ item.town_village }}: {{ item.count }}</li>
+            {% endfor %}
+          </ul>
+        </div>
 
-    <!-- Time Statistics -->
-    <h3>Number of Students Who Received Services</h3>
-    <ul>
-      <li>In the last 2 weeks: {{ students_in_last_two_weeks }}</li>
-      <li>In the last 6 months: {{ students_in_last_six_months }}</li>
-      <li>In the last 1 year: {{ students_in_last_year }}</li>
-    </ul>
+        <!-- Number of Students by Country of Origin -->
+        <div class="stat-list">
+          <h3>Country of Origin</h3>
+          <ul>
+            {% for item in students_by_country %}
+            <li>{{ item.country_of_origin }}: {{ item.count }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Number of Students by Current Grade -->
+        <div class="stat-list">
+          <h3>Current Grade</h3>
+          <ul>
+            {% for item in students_by_grade %}
+            <li>{{ item.current_grade }}: {{ item.count }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Number of Parents by Town/Village -->
+        <div class="stat-list">
+          <h3>Town (Parents)</h3>
+          <ul>
+            {% for item in parents_by_town %}
+            <li>{{ item.town_village }}: {{ item.count }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Time Statistics -->
+        <div class="stat-list">
+          <h3>Students Who Received Services</h3>
+          <ul>
+            <li>In the last 2 weeks: {{ students_in_last_two_weeks }}</li>
+            <li>In the last 6 months: {{ students_in_last_six_months }}</li>
+            <li>In the last 1 year: {{ students_in_last_year }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

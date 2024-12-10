@@ -1,17 +1,21 @@
-<!-- templates/student_update.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Update Parent Information</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
   </head>
   <body>
-    <h1>Update Parent Information</h1>
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Save Changes</button>
-    </form>
-    <a href="{% url 'parent_detail' object.pk %}">Cancel</a>
+    <div class="container">
+        <h1>Update Parent Information</h1>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn">Save Changes</button>
+        </form>
+        <a href="{% url 'parent_detail' object.pk %}" class="btn">Cancel</a>
+    </div>
   </body>
 </html>

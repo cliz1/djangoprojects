@@ -4,27 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parent Detail</title>
+     <!-- Navigation links -->
+     <div class="nav-links">
+        <a href="{% url 'parent_search' %}" class="btn btn-secondary">Back to Parent Search</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    </div>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
 </head>
 <body>
-    <h1>{{ parent.first_name }} {{ parent.last_name }}</h2>
-    <p><strong>Email:</strong> {{ parent.email_address }}</p>
-    <p><strong>Phone Number:</strong> {{ parent.phone_number }}</p>
-    <p><strong>Address:</strong> {{ parent.home_address }}</p>
-    <p><strong>Town/Village:</strong> {{ parent.town_village }}</p>
-    <p><strong>Date of Intake:</strong> {{ parent.date_of_intake }}</p>
+    <div class="container">
+        
+        <!-- Parent Name -->
+        <h1>{{ parent.first_name }} {{ parent.last_name }}</h1>
 
-    <a href="{% url 'parent_update' parent.pk %}">
-        <button>Update Parent Information</button>
-    </a>
+        <!-- Parent Details -->
+        <div class="parent-details">
+            <p><strong>Email:</strong> {{ parent.email_address }}</p>
+            <p><strong>Phone Number:</strong> {{ parent.phone_number }}</p>
+            <p><strong>Address:</strong> {{ parent.home_address }}</p>
+            <p><strong>Town/Village:</strong> {{ parent.town_village }}</p>
+            <p><strong>Date of Intake:</strong> {{ parent.date_of_intake }}</p>
+        </div>
 
-    <h2>Children</h3>
-    <ul>
-        {% for student in students %}
-        <li><a href="{% url 'student_detail' student.pk %}">{{ student.first_name }} {{ student.last_name }}</a></li>
-        {% empty %}
-        <li>No children found for this parent.</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'parent_search' %}">Back to Parent Search</a>
+        <!--Update Button-->
+        <div class="nav-links">
+            <a href="{% url 'parent_update' parent.pk %}" class="btn btn-secondary">Update Parent Information</a>
+        </div>
+
+        <!-- Children List -->
+        <div class="children-section">
+            <h2>Children</h2>
+            <ul>
+                {% for student in students %}
+                    <li><a href="{% url 'student_detail' student.pk %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+                {% empty %}
+                    <li>No children found for this parent.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

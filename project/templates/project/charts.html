@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charts</title>
+     <!-- Back to Home link -->
+     <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Page Title -->
+        <h1>Custom Charts</h1>
+
+        <!-- Filter Form -->
+        <form method="get" class="search-form">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+        <!-- Displaying Charts -->
+        <div class="chart-container">
+            <div class="chart">
+                {{ graph1_html|safe }}
+            </div>
+            <div class="chart">
+                {{ graph2_html|safe }}
+            </div>
+            <div class="chart">
+                {{ graph3_html|safe }}
+            </div>
+            <div class="chart">
+                {{ graph4_html|safe }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

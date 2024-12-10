@@ -4,29 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Parents</title>
+     <!-- Back to Home link -->
+     <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
 </head>
 <body>
-    <a href="{% url 'home' %}">Back to Home</a>
-    <h1>Search Parents</h1>
+    <div class="container">
+        
+        <!-- Main Title -->
+        <h1>Search Parents</h1>
 
-    <!-- Search and Filter Form -->
-    <form method="get">
-        {% csrf_token %}
-        {{ form.as_p }}  <!-- This will render the form fields as <p> elements -->
+        <!-- Search and Filter Form -->
+        <form method="get" class="search-form">
+            {% csrf_token %}
+            
+            <!-- Render form fields with custom styling -->
+            {{ form.as_p }}
 
-        <button type="submit">Search</button>
-    </form>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
 
-    {% if request.GET.search_name or request.GET.town_village %}
-        <h2>Results</h2>
-        <ul>
-            {% for parent in parents %}
-            <a href="{% url 'parent_detail' parent.pk %}">
-                <li>{{ parent.first_name }} {{ parent.last_name }}</li>
-            {% empty %}
-                <li>No parents found matching the search criteria.</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if request.GET.search_name or request.GET.town_village %}
+            <h2>Results</h2>
+            <ul class="parent-list">
+                {% for parent in parents %}
+                    <a href="{% url 'parent_detail' parent.pk %}" class="parent-link">
+                        <li>{{ parent.first_name }} {{ parent.last_name }}</li>
+                    </a>
+                {% empty %}
+                    <li>No parents found matching the search criteria.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 </body>
 </html>
