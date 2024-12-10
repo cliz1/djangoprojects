@@ -1,3 +1,8 @@
+# File: admin.py
+# Author: Nathaniel Clizbe (clizbe@bu.edu), 12/10/2024
+# Description: Admin stuff for the project project
+
+
 from django.contrib import admin
 
 # Register your models here.

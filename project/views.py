@@ -1,3 +1,7 @@
+# File: views.py
+# Author: Nathaniel Clizbe (clizbe@bu.edu), 12/10/2024
+# Description: Views for final project (so a user can view things)
+
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect

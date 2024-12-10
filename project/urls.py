@@ -1,3 +1,6 @@
+# File: urls.py
+# Author: Nathaniel Clizbe (clizbe@bu.edu), 12/10/2024
+# Description: URLS for the final project website (to navigate between pages and perform actions)
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service, IntakeView, charts_view, DeleteServiceView, DeleteAdvocacyServiceView
