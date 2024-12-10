@@ -1,3 +1,7 @@
+# File: views.py
+# Author: Nathaniel Clizbe (clizbe@bu.edu), 12/10/2024
+# Description: A bunch of forms to be used by the views
+
 from django import forms
 from .models import Student, Parent
 from django.utils import timezone

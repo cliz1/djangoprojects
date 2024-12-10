@@ -1,3 +1,6 @@
+# File: models.py
+# Author: Nathaniel Clizbe (clizbe@bu.edu), 12/10/2024
+# Description: All the database models for the project
 from django.db import models
 
 class Parent(models.Model):
