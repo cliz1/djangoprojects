@@ -2,6 +2,9 @@
 # Author: Nathaniel Clizbe (clizbe@bu.edu), 12/10/2024
 # Description: All the database models for the project
 from django.db import models
+import csv
+from datetime import datetime
+#from .models import Parent, Student, TutoringService, AdvocacyService
 
 class Parent(models.Model):
     first_name = models.CharField(max_length=50)
@@ -19,7 +22,7 @@ class Parent(models.Model):
 class Student(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True, blank=True)
     current_grade = models.IntegerField()
     town_village = models.CharField(max_length=100)
     #school_district = models.CharField(max_length=100)
@@ -50,3 +53,135 @@ class AdvocacyService(models.Model):
 
     def __str__(self):
         return f"Advocacy: {self.student.first_name} on {self.date_of_contact}"
+
+
+def load_data(file_path):
+    """
+    Load data from a CSV file and populate the database.
+
+    Args:
+        file_path (str): Path to the CSV file.
+    """
+    count = 0
+    with open(file_path, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            print(count)
+            form_type = row.get('Choose Form Type', '').strip()
+
+            if form_type == 'Intake':
+                handle_intake(row)
+            elif form_type == 'Advocacy contact':
+                handle_advocacy_contact(row)
+            elif form_type == 'Tutoring contact':
+                handle_tutoring_contact(row)
+            count+=1
+
+def handle_intake(row):
+    """Handle intake rows by creating parents and students."""
+    parent = Parent.objects.create(
+        date_of_intake = datetime.strptime(row["Timestamp"], "%m/%d/%Y %H:%M:%S").date(),
+        first_name=row['Parent first name'],
+        last_name=row['Parent last name'],
+        phone_number=row['Phone number'],
+        email_address=row.get('Email', ''),
+        home_address=row['Address'],
+        town_village=row['Town/ Village'],
+        country_of_origin=row['Country of origin'],
+    )
+
+    create_student(
+        date_of_intake = datetime.strptime(row["Timestamp"], "%m/%d/%Y %H:%M:%S").date(),
+        parent=parent,
+        first_name=row['Student first name'],
+        last_name=row['Student last name'],
+        date_of_birth=row['Date of birth'],
+        grade=row['Current grade'],
+        town_village=row['Town/ Village'],
+        country_of_origin=row['Country of origin'],
+    )
+
+    for i in range(2, 4):  # Handles Student #2 and Student #3
+        first_name_key = f'Student #{i} first name'
+        if row.get(first_name_key):
+            create_student(
+                date_of_intake = datetime.strptime(row["Timestamp"], "%m/%d/%Y %H:%M:%S").date(),
+                parent=parent,
+                first_name=row[first_name_key],
+                last_name=row[f'Student #{i} last name'],
+                date_of_birth=row[f'Student #{i} date of birth'],
+                grade=row[f'Student #{i} current grade'],
+                town_village=row['Town/ Village'],
+                country_of_origin=row['Country of origin']
+            )
+
+
+def create_student(date_of_intake, parent, first_name, last_name, date_of_birth, grade, town_village, country_of_origin):
+    """Create a student and associate with the parent."""
+    if grade=='K':
+        grade = 0
+    if grade =='OS':
+        grade = 13
+    if grade =='':
+        grade = 13
+    Student.objects.create(
+        date_of_intake=date_of_intake,
+        parent=parent,
+        first_name=first_name,
+        last_name=last_name,
+        date_of_birth=parse_date(date_of_birth),
+        current_grade=grade,
+        town_village = town_village,
+        country_of_origin = country_of_origin
+    )
+
+
+def handle_advocacy_contact(row):
+    """Handle advocacy contact rows by adding services to existing students."""
+    try:
+        student = Student.objects.get(
+            first_name=row['Student first nameC'],
+            last_name=row['Student last nameC']
+        )
+    except Student.DoesNotExist:
+        print(f"Student not found: {row['Student first name']} {row['Student last name']}")
+        return
+
+    print(row['Length of contact'])
+    AdvocacyService.objects.create(
+        student=student,
+        date_of_contact=parse_date(row['Date of contactC']),
+        school_district=row['School districtC'],
+        length_of_contact=row['Length of contactC'],
+        description=row['Description of advocacy'],
+    )
+
+
+def handle_tutoring_contact(row):
+    """Handle tutoring contact rows by adding services to existing students."""
+    try:
+        student = Student.objects.get(
+            first_name=row['Student first nameB'],
+            last_name=row['Student last nameB']
+        )
+    except Student.DoesNotExist:
+        print(f"Student not found: {row['Student first name']} {row['Student last name']}")
+        return
+
+    TutoringService.objects.create(
+        student=student,
+        date_of_contact=parse_date(row['Date of contactB']),
+        location_of_contact=row['Location of contact'],
+        length_of_session=row['Length of session'],
+        session_focus=row['Focus'],
+        activity=row['Activity'],
+    )
+
+
+def parse_date(date_str):
+    """Parse a date string into a datetime object."""
+    try:
+        return datetime.strptime(date_str, '%m/%d/%Y').date()
+    except (ValueError, TypeError):
+        return None
+
