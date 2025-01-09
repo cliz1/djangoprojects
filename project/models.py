@@ -9,12 +9,12 @@ from datetime import datetime
 class Parent(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    date_of_intake = models.DateField()
-    email_address = models.EmailField()
-    home_address = models.TextField()
-    phone_number = models.CharField(max_length=15)
-    town_village = models.CharField(max_length=100)
-    country_of_origin = models.CharField(max_length=100, default="None")
+    date_of_intake = models.DateField(null=True, blank=True)
+    email_address = models.EmailField(null=True, blank=True)
+    home_address = models.TextField(null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    town_village = models.CharField(max_length=100, null=True, blank=True)
+    country_of_origin = models.CharField(max_length=100, default="None", null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -23,11 +23,11 @@ class Student(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     date_of_birth = models.DateField(null=True, blank=True)
-    current_grade = models.IntegerField()
-    town_village = models.CharField(max_length=100)
+    current_grade = models.IntegerField(null=True, blank=True)
+    town_village = models.CharField(max_length=100, null=True, blank=True)
     #school_district = models.CharField(max_length=100)
-    country_of_origin = models.CharField(max_length=100)
-    date_of_intake = models.DateField()
+    country_of_origin = models.CharField(max_length=100, null=True, blank=True)
+    date_of_intake = models.DateField(null=True, blank=True)
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE, related_name="children")
     
     def __str__(self):
@@ -131,7 +131,7 @@ def create_student(date_of_intake, parent, first_name, last_name, date_of_birth,
         last_name=last_name,
         date_of_birth=parse_date(date_of_birth),
         current_grade=grade,
-        town_village = town_village,
+        town_village = '',
         country_of_origin = country_of_origin
     )
 
@@ -147,7 +147,10 @@ def handle_advocacy_contact(row):
         print(f"Student not found: {row['Student first name']} {row['Student last name']}")
         return
 
-    print(row['Length of contact'])
+    if student.town_village=='':
+        student.town_village = row['School districtC']
+        student.save()
+
     AdvocacyService.objects.create(
         student=student,
         date_of_contact=parse_date(row['Date of contactC']),
@@ -167,6 +170,10 @@ def handle_tutoring_contact(row):
     except Student.DoesNotExist:
         print(f"Student not found: {row['Student first name']} {row['Student last name']}")
         return
+
+    if student.town_village=='':
+        student.town_village = row['School districtB']
+        student.save()
 
     TutoringService.objects.create(
         student=student,
