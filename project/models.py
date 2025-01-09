@@ -131,7 +131,7 @@ def create_student(date_of_intake, parent, first_name, last_name, date_of_birth,
         last_name=last_name,
         date_of_birth=parse_date(date_of_birth),
         current_grade=grade,
-        town_village = '',
+        town_village = 'None',
         country_of_origin = country_of_origin
     )
 
@@ -147,7 +147,7 @@ def handle_advocacy_contact(row):
         print(f"Student not found: {row['Student first name']} {row['Student last name']}")
         return
 
-    if student.town_village=='':
+    if student.town_village=='None':
         student.town_village = row['School districtC']
         student.save()
 
@@ -171,7 +171,7 @@ def handle_tutoring_contact(row):
         print(f"Student not found: {row['Student first name']} {row['Student last name']}")
         return
 
-    if student.town_village=='':
+    if student.town_village=='None':
         student.town_village = row['School districtB']
         student.save()
 
