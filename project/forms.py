@@ -39,6 +39,9 @@ class StudentUpdateForm(forms.ModelForm):
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['town_village'].label = 'School District'
 
 class ParentUpdateForm(forms.ModelForm):
     class Meta:
