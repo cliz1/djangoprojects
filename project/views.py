@@ -249,6 +249,8 @@ class IntakeView(LoginRequiredMixin, View):
         parent_form = ParentForm(request.POST)
         student_form = StudentForm(request.POST)
 
+        print(parent_form.is_valid())
+        print(parent_form.errors)
         if 'add_parent' in request.POST and parent_form.is_valid():
             parent_form.save()
             return redirect('intake')  # Redirect back to intake page after saving parent
@@ -257,7 +259,7 @@ class IntakeView(LoginRequiredMixin, View):
             student_form.save()
             return redirect('intake')  # Redirect back to intake page after saving student
 
-        return render(request, 'intake.html', {'parent_form': parent_form, 'student_form': student_form})
+        return render(request, 'project/intake.html', {'parent_form': parent_form, 'student_form': student_form})
 
 class DeleteServiceView(LoginRequiredMixin, View):
     def post(self, request, pk):

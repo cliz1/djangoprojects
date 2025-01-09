@@ -52,9 +52,13 @@ class ParentForm(forms.ModelForm):
     class Meta:
         model = Parent
         fields = ['first_name', 'last_name', 'date_of_intake', 'email_address', 'home_address', 'phone_number', 'town_village']
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['date_of_intake'].required = False
+        self.fields['email_address'].required = False
+        self.fields['home_address'].required = False
+        self.fields['phone_number'].required = False
+        self.fields['town_village'].required = False
         self.fields['date_of_intake'].initial = timezone.now().date()
     
 
@@ -65,6 +69,12 @@ class StudentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields['date_of_intake'].required = False
+        self.fields['date_of_birth'].required = False
+        self.fields['current_grade'].required = False
+        self.fields['town_village'].required = False
+        self.fields['country_of_origin'].required = False
         self.fields['date_of_intake'].initial = timezone.now().date()
 
         # Set custom labels for the fields
