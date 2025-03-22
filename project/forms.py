@@ -31,6 +31,11 @@ class ParentSearchForm(forms.Form):
         required=False,
         label="Town/Village"
     )
+    country_of_origin = forms.ChoiceField(
+        choices=[('', 'All')] + [(country, country) for country in Parent.objects.values_list('country_of_origin', flat=True).distinct()],
+        required=False,
+        label="Country of Origin"
+    )
 
 class StudentUpdateForm(forms.ModelForm):
     class Meta:

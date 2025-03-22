@@ -181,6 +181,7 @@ class ParentSearchView(LoginRequiredMixin, ListView):
         # Get search and filter parameters from GET request
         search_name = self.request.GET.get("search_name", "")
         town_filter = self.request.GET.get("town_village", "")
+        country_filter = self.request.GET.get("country_of_origin", "")
 
         # Apply search by name (case-insensitive)
         if search_name:
@@ -198,6 +199,10 @@ class ParentSearchView(LoginRequiredMixin, ListView):
         # Apply filter for town/village
         if town_filter:
             queryset = queryset.filter(town_village=town_filter)
+
+        #Apply filter for country of origin
+        if country_filter:
+            queryset = queryset.filter(country_of_origin=country_filter)
 
         return queryset
 
