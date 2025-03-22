@@ -29,7 +29,7 @@
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
 
-        {% if request.GET.search_name or request.GET.town_village %}
+        {% if request.GET.search_name or request.GET.town_village or request.GET.country_of_origin %}
             <h2>Results</h2>
             <ul class="parent-list">
                 {% for parent in parents %}
