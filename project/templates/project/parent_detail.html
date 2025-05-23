@@ -35,6 +35,11 @@
         <div class="nav-links">
             <a href="{% url 'parent_update' parent.pk %}" class="btn btn-secondary">Update Parent Information</a>
         </div>
+        <div>
+            <a href="{% url 'parent-delete' parent.pk %}" style="background-color: #dc2626; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none;">
+                Delete Parent
+            </a>                    
+        </div>
 
         <!-- Children List -->
         <div class="children-section">

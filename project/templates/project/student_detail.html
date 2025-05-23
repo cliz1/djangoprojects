@@ -27,6 +27,8 @@
     <p><strong>Grade:</strong> {{ student.current_grade }}</p>
     <p><strong>School District:</strong> {{ student.town_village }}</p>
     <p><strong>Country of Origin:</strong> {{ student.country_of_origin }}</p>
+    <p><strong>Email:</strong> {{ student.email_address }}</p>
+    <p><strong>Phone Number:</strong> {{ student.phone_number }}</p>
     <p><strong>Parent:</strong> <a href="{% url 'parent_detail' student.parent.pk %}">{{ student.parent.first_name }} {{ student.parent.last_name }}</a></p>
     <!-- Display total hours for tutoring and advocacy -->
 <p><strong>Total Tutoring Hours:</strong> {{ tutoring_hours|floatformat:1 }} hours</p>
@@ -35,6 +37,11 @@
 
      <div class="nav-links">
         <a href="{% url 'student_update' student.pk %}" class="btn btn-secondary">Update Student Information</a>
+    </div>
+    <div>
+        <a href="{% url 'student-delete' student.pk %}" style="background-color: #dc2626; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none;">
+            Delete Student
+        </a>                    
     </div>
 
     <!-- Tutoring Services Log -->
@@ -206,7 +213,7 @@
             <label for="description">Description:</label>
             <textarea name="description" required></textarea><br>
             <label for="length_of_contact">Length (hours):</label>
-            <input type="number" name="length_of_contact" step="0.1" required><br>
+            <input type="number" name="length_of_contact" step="0.25" required><br>
             <button type="submit">Save</button>
             <button type="button" class="cancelButton" data-form-id="addAdvocacyForm">Cancel</button>
         </form>
