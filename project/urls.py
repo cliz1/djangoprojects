@@ -3,7 +3,7 @@
 # Description: URLS for the final project website (to navigate between pages and perform actions)
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service, IntakeView, charts_view, DeleteServiceView, DeleteAdvocacyServiceView
+from .views import HomePageView, StudentSearchView, StudentDetailView, ParentSearchView, ParentDetailView, StudentUpdateView, ParentUpdateView, add_advocacy_service, add_tutoring_service, IntakeView, charts_view, DeleteServiceView, DeleteAdvocacyServiceView, StudentDeleteView, ParentDeleteView
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
@@ -21,5 +21,15 @@ urlpatterns = [
     path('charts/', charts_view, name='charts'),
     path('delete_service/<int:pk>/', DeleteServiceView.as_view(), name='delete_service'),
     path('delete_adv_service/<int:pk>/', DeleteAdvocacyServiceView.as_view(), name='delete_adv_service'),
+    path(
+        "students/<int:pk>/delete/",
+        StudentDeleteView.as_view(),
+        name="student-delete",
+    ),
+    path(
+        "parents/<int:pk>/delete/",
+        ParentDeleteView.as_view(),
+        name="parent-delete",
+    ),
 
 ]

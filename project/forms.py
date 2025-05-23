@@ -9,7 +9,7 @@ from django.utils import timezone
 class StudentSearchForm(forms.Form):
     # Create the fields
     search_name = forms.CharField(max_length=100, required=False, label="Search by Name")
-    country_of_origin = forms.ChoiceField(choices=[('', 'All')] + [(country, country) for country in Student.objects.values_list('country_of_origin', flat=True).distinct()], required=False, label="Country of Origin")
+    country_of_origin = forms.ChoiceField(choices=[('', 'All')] + [(country, country) for country in Student.objects.values_list('country_of_origin', flat=True).distinct() if country is not None], required=False, label="Country of Origin")
     current_grade = forms.ChoiceField(choices=[('', 'All')] + [(grade, grade) for grade in Student.objects.values_list('current_grade', flat=True).distinct()], required=False, label="Grade")
     town_village = forms.ChoiceField(choices=[('', 'All')] + [(town, town) for town in Student.objects.values_list('town_village', flat=True).distinct()], required=False, label="School District")
     #school_district = forms.ChoiceField(choices=[('', 'All')] + [(district, district) for district in Student.objects.values_list('school_district', flat=True).distinct()], required=False, label="School District")
@@ -73,7 +73,7 @@ class ParentForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['date_of_intake', 'first_name', 'last_name', 'date_of_birth', 'current_grade', 'town_village', 'country_of_origin', 'parent']
+        fields = ['date_of_intake', 'first_name', 'last_name', 'date_of_birth', 'current_grade', 'town_village', 'country_of_origin', 'parent', 'email_address', 'phone_number']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -84,7 +84,9 @@ class StudentForm(forms.ModelForm):
         self.fields['town_village'].required = False
         self.fields['country_of_origin'].required = False
         self.fields['date_of_intake'].initial = timezone.now().date()
-
+        #added fields
+        self.fields['email_address'].required = False
+        self.fields['phone_number'].required = False
         # Set custom labels for the fields
         self.fields['date_of_intake'].label = 'Date of Intake'
         self.fields['first_name'].label = 'First Name'
@@ -94,6 +96,8 @@ class StudentForm(forms.ModelForm):
         self.fields['town_village'].label = 'School District'
         self.fields['country_of_origin'].label = 'Country of Origin'
         self.fields['parent'].label = 'Parent'
+        self.fields['email_address'].label = 'Email Address'
+        self.fields['phone_number'].label = 'Phone Number'
 
 class ChartsFilterForm(forms.Form):
     town_village = forms.ModelMultipleChoiceField(

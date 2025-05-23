@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.db.models import Case, When, Value, CharField
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView
 from django.db.models import Count, Q, Sum, F, FloatField
 from .models import Student, Parent, TutoringService, AdvocacyService
 from datetime import timedelta, date, datetime
@@ -19,6 +19,26 @@ import plotly.express as px
 
 
 # Create your views here.
+
+GRADE_LABELS = {
+    -1: "OS",
+    0: "K",
+    1: "1",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
+    7: "7",
+    8: "8",
+    9: "9",
+    10: "10",
+    11: "11",
+    12: "12",
+    13: "13"
+    # ... etc., or use str(x) as default
+}
+
 
 class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = "project/home.html"
@@ -38,11 +58,21 @@ class HomePageView(LoginRequiredMixin, TemplateView):
             .annotate(count=Count("id"))
             .order_by("-count")
         )
-        context["students_by_grade"] = (
-            Student.objects.values("current_grade")
-            .annotate(count=Count("id"))
-            .order_by("current_grade")
+
+        grade_counts = (
+        Student.objects.values("current_grade")
+        .annotate(count=Count("id"))
+        .order_by("current_grade")
         )
+
+        # Map internal int grades to readable labels
+        context["students_by_grade"] = [
+            {
+                "grade": GRADE_LABELS.get(entry["current_grade"], str(entry["current_grade"])),
+                "count": entry["count"]
+            }
+            for entry in grade_counts
+]
 
         context["parents_by_town"] = (Parent.objects.values('town_village').annotate(count=Count('id')))
 
@@ -85,7 +115,7 @@ class StudentSearchView(LoginRequiredMixin, ListView):
     model = Student
     template_name = "project/student_search.html"
     context_object_name = "students"
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         queryset = Student.objects.all()
@@ -109,7 +139,7 @@ class StudentSearchView(LoginRequiredMixin, ListView):
                 queryset = queryset.filter(
                 Q(first_name__icontains=name_parts[0]) & Q(last_name__icontains=" ".join(name_parts[1:]))
         )
-
+        
         # Apply filters for town, country, grade, and school district
         if town_filter:
             queryset = queryset.filter(town_village=town_filter)
@@ -265,6 +295,18 @@ class IntakeView(LoginRequiredMixin, View):
             return redirect('intake')  # Redirect back to intake page after saving student
 
         return render(request, 'project/intake.html', {'parent_form': parent_form, 'student_form': student_form})
+    
+class StudentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Student
+    template_name = "project/student_confirm_delete.html"
+    success_url = reverse_lazy("home")  
+    # replace "student-list" with the name of the view/URL where you list students
+
+class ParentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Parent
+    template_name = "project/parent_confirm_delete.html"
+    success_url = reverse_lazy("home")  
+    # similarly adjust to your parent-list view name
 
 class DeleteServiceView(LoginRequiredMixin, View):
     def post(self, request, pk):
