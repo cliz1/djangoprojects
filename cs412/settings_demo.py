@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-eu1^&84hpbu&qk+af7z!&_ps1h^dwdddf=apzjt33r-+hn$5+p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["https://twain-quotes-6f7db3879a82.herokuapp.com/", '127.0.0.1', "theflyingstonecanteen-45ffd096eafa.herokuapp.com"]
 
@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "restaurant",
     "blog",
     "mini_fb",
-    "voter_analytics"
+    "voter_analytics",
+    "project_demo"
 ]
 
 MIDDLEWARE = [
@@ -83,29 +84,12 @@ WSGI_APPLICATION = 'cs412.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-ENV = os.getenv("DJANGO_ENV", "production")
-
-if ENV == "demo":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'demo_db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'demo_db.sqlite3',
     }
-    INSTALLED_APPS += ["project_demo"]
-
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'd1bshaf7on9o9t',
-            'USER': 'udgvc4ntteth0r',
-            'PASSWORD': 'pbb0bd25b34e0f9fb3ecd3f4ba737635d0b576433d3067cd388bfb62b72b57554',
-            'HOST': 'c6sfjnr30ch74e.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
-            'PORT': '5432',
-        }
-    }
-    INSTALLED_APPS += ["project"]
+}
 
 
 
@@ -144,7 +128,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 

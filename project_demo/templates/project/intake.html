@@ -1,0 +1,34 @@
+ <!-- File: intake.html -->
+<!-- Author: Nathaniel Clizbe clizbe@bu.edu 12/10/2024 -->
+<!-- Template for Displaying Intake Forms -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Intake Forms</title>
+    <a href="{% url 'home' %}">Back to Home</a>
+    <!-- Link to my CSS file -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
+  </head>
+  <body>
+    <div class="container"> <!-- Added container -->
+      <h1>Client Intake Forms</h1>
+
+      <h2>Add a New Parent</h2>
+      <form method="post">
+        {% csrf_token %} 
+        {{ parent_form.as_p }}
+        <button type="submit" name="add_parent">Add Parent</button>
+      </form>
+
+      <h2>Add a New Student</h2>
+      <form method="post">
+        {% csrf_token %} 
+        {{ student_form.as_p }}
+        <button type="submit" name="add_student">Add Student</button>
+      </form>
+    </div> <!-- End container -->
+  </body>
+</html>
