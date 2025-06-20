@@ -1,0 +1,46 @@
+<!-- File: student_search.html -->
+<!-- Author: Nathaniel Clizbe clizbe@bu.edu 12/10/2024 -->
+<!-- Template for Displaying Student Search Form-->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!-- Back to Home link -->
+     <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    <title>Search Students</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Main Title -->
+        <h1>Search Students</h1>
+
+        <!-- Search and Filter Form -->
+        <form method="get" class="search-form">
+            {% csrf_token %}
+            
+            <!-- Render form fields with custom styling -->
+            {{ form.as_p }}
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        {% if request.GET.search_name or request.GET.town_village or request.GET.country_of_origin or request.GET.current_grade or request.GET.time_period %}
+            <h2>Results</h2>
+            <ul class="student-list">
+                {% for student in students %}
+                    <a href="{% url 'student_detail' student.pk %}" class="student-link">
+                        <li>{{ student.first_name }} {{ student.last_name }}</li>
+                    </a>
+                {% empty %}
+                    <li>No students found matching the search criteria.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

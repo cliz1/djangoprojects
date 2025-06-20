@@ -26,9 +26,18 @@ urlpatterns = [
     path("restaurant/", include ("restaurant.urls")),
     path("blog/", include("blog.urls")),
     path("mini_fb/", include("mini_fb.urls")),
-    path('voters/', include('voter_analytics.urls')),
-    path('project/', include("project.urls"))
+    path('voters/', include('voter_analytics.urls'))
                                     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Conditionally include either the real or demo app URLs
+if 'project_demo' in settings.INSTALLED_APPS:
+    urlpatterns += [
+        path('project/', include("project_demo.urls")),
+    ]
+elif 'project' in settings.INSTALLED_APPS:
+    urlpatterns += [
+        path('project/', include("project.urls")),
+    ]

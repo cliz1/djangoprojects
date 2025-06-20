@@ -40,7 +40,7 @@ GRADE_LABELS = {
 }
 
 
-class HomePageView(LoginRequiredMixin, TemplateView):
+class HomePageView(TemplateView):
     template_name = "project/home.html"
 
     def get_context_data(self, **kwargs):
@@ -111,7 +111,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
         return context
 
-class StudentSearchView(LoginRequiredMixin, ListView):
+class StudentSearchView(ListView):
     model = Student
     template_name = "project/student_search.html"
     context_object_name = "students"
@@ -175,7 +175,7 @@ class StudentSearchView(LoginRequiredMixin, ListView):
         return context
     
 
-class StudentDetailView(LoginRequiredMixin, DetailView):
+class StudentDetailView(DetailView):
     model = Student
     template_name = 'project/student_detail.html'
     context_object_name = 'student'
@@ -199,7 +199,7 @@ class StudentDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-class ParentSearchView(LoginRequiredMixin, ListView):
+class ParentSearchView(ListView):
     model = Parent
     template_name = "project/parent_search.html"
     context_object_name = "parents"
@@ -242,7 +242,7 @@ class ParentSearchView(LoginRequiredMixin, ListView):
         return context
    
 
-class ParentDetailView(LoginRequiredMixin, DetailView):
+class ParentDetailView(DetailView):
     model = Parent
     template_name = 'project/parent_detail.html'
     context_object_name = 'parent'
@@ -255,7 +255,7 @@ class ParentDetailView(LoginRequiredMixin, DetailView):
         context['students'] = Student.objects.filter(parent=parent)
         return context
 
-class StudentUpdateView(LoginRequiredMixin, UpdateView):
+class StudentUpdateView(UpdateView):
     model = Student
     form_class = StudentUpdateForm
     template_name = 'project/student_update.html'
@@ -265,7 +265,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('student_detail', kwargs={'pk': self.object.pk})
     
 
-class ParentUpdateView(LoginRequiredMixin, UpdateView):
+class ParentUpdateView(UpdateView):
     model = Parent
     form_class = ParentUpdateForm
     template_name = 'project/parent_update.html'
@@ -274,7 +274,7 @@ class ParentUpdateView(LoginRequiredMixin, UpdateView):
         # Redirect to the student's detail page after a successful update
         return reverse_lazy('parent_detail', kwargs={'pk': self.object.pk})
 
-class IntakeView(LoginRequiredMixin, View):
+class IntakeView(View):
     def get(self, request):
         parent_form = ParentForm()
         student_form = StudentForm()
@@ -296,19 +296,19 @@ class IntakeView(LoginRequiredMixin, View):
 
         return render(request, 'project/intake.html', {'parent_form': parent_form, 'student_form': student_form})
     
-class StudentDeleteView(LoginRequiredMixin, DeleteView):
+class StudentDeleteView(DeleteView):
     model = Student
     template_name = "project/student_confirm_delete.html"
     success_url = reverse_lazy("home")  
     # replace "student-list" with the name of the view/URL where you list students
 
-class ParentDeleteView(LoginRequiredMixin, DeleteView):
+class ParentDeleteView(DeleteView):
     model = Parent
     template_name = "project/parent_confirm_delete.html"
     success_url = reverse_lazy("home")  
     # similarly adjust to your parent-list view name
 
-class DeleteServiceView(LoginRequiredMixin, View):
+class DeleteServiceView(View):
     def post(self, request, pk):
         # Find the service by primary key
         service = get_object_or_404(TutoringService, pk=pk)  
@@ -317,7 +317,7 @@ class DeleteServiceView(LoginRequiredMixin, View):
         # Redirect back to the student's detail page
         return redirect('student_detail', pk=service.student.pk)
 
-class DeleteAdvocacyServiceView(LoginRequiredMixin, View):
+class DeleteAdvocacyServiceView(View):
     def post(self, request, pk):
         # Find the service by primary key
         service = get_object_or_404(AdvocacyService, pk=pk)  

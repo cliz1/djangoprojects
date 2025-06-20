@@ -1,0 +1,57 @@
+<!-- File: parent_detail.html -->
+<!-- Author: Nathaniel Clizbe clizbe@bu.edu 12/10/2024 -->
+<!-- Template for Displaying a Parent Detail Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Detail</title>
+     <!-- Navigation links -->
+     <div class="nav-links">
+        <a href="{% url 'parent_search' %}" class="btn btn-secondary">Back to Parent Search</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    </div>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project-styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Parent Name -->
+        <h1>{{ parent.first_name }} {{ parent.last_name }}</h1>
+
+        <!-- Parent Details -->
+        <div class="parent-details">
+            <p><strong>Email:</strong> {{ parent.email_address }}</p>
+            <p><strong>Phone Number:</strong> {{ parent.phone_number }}</p>
+            <p><strong>Address:</strong> {{ parent.home_address }}</p>
+            <p><strong>Town/Village:</strong> {{ parent.town_village }}</p>
+            <p><strong>Date of Intake:</strong> {{ parent.date_of_intake }}</p>
+            <p><strong>Country of Origin:</strong> {{ parent.country_of_origin }}</p>
+        </div>
+
+        <!--Update Button-->
+        <div class="nav-links">
+            <a href="{% url 'parent_update' parent.pk %}" class="btn btn-secondary">Update Parent Information</a>
+        </div>
+        <div>
+            <a href="{% url 'parent-delete' parent.pk %}" style="background-color: #dc2626; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none;">
+                Delete Parent
+            </a>                    
+        </div>
+
+        <!-- Children List -->
+        <div class="children-section">
+            <h2>Children</h2>
+            <ul>
+                {% for student in students %}
+                    <li><a href="{% url 'student_detail' student.pk %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+                {% empty %}
+                    <li>No children found for this parent.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
