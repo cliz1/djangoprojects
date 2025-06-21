@@ -1,3 +1,11 @@
 /staticfiles/
 Pipfile
 Pipfile.lock
+.DS_store
+
+pgloader.config
+
+rds-global-bundle.pem
+
+#scripts
+generate_fake.py

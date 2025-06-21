@@ -32,7 +32,7 @@
     <p><strong>Parent:</strong> <a href="{% url 'parent_detail' student.parent.pk %}">{{ student.parent.first_name }} {{ student.parent.last_name }}</a></p>
     <!-- Display total hours for tutoring and advocacy -->
 <p><strong>Total Tutoring Hours:</strong> {{ tutoring_hours|floatformat:1 }} hours</p>
-<p><strong>Total Advocacy Hours:</strong> {{ advocacy_hours }} hours</p>
+<p><strong>Total Advocacy Hours:</strong> {{ advocacy_hours|floatformat:1 }} hours</p>
     <!--UPDATE BUTTON-->
 
      <div class="nav-links">

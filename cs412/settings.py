@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -22,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-eu1^&84hpbu&qk+af7z!&_ps1h^dwdddf=apzjt33r-+hn$5+p'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://twain-quotes-6f7db3879a82.herokuapp.com/", '127.0.0.1', "theflyingstonecanteen-45ffd096eafa.herokuapp.com"]
+ALLOWED_HOSTS = ['127.0.0.1', "theflyingstonecanteen-45ffd096eafa.herokuapp.com", 'project-demo-app-884f0cd6a1f7.herokuapp.com']
 
 
 # Application definition
@@ -38,12 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    "quote_of_day",
-    "restaurant",
-    "blog",
-    "mini_fb",
-    "voter_analytics"
+    'django.contrib.staticfiles'
 ]
 
 MIDDLEWARE = [
@@ -96,15 +92,11 @@ if ENV == "demo":
 
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'd1bshaf7on9o9t',
-            'USER': 'udgvc4ntteth0r',
-            'PASSWORD': 'pbb0bd25b34e0f9fb3ecd3f4ba737635d0b576433d3067cd388bfb62b72b57554',
-            'HOST': 'c6sfjnr30ch74e.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
-            'PORT': '5432',
-        }
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600
+    )
+}
     INSTALLED_APPS += ["project"]
 
 
