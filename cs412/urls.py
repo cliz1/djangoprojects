@@ -20,13 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("hw/", include("hw.urls")),
-    path("quote_of_day/", include("quote_of_day.urls")),
-    path("restaurant/", include ("restaurant.urls")),
-    path("blog/", include("blog.urls")),
-    path("mini_fb/", include("mini_fb.urls")),
-    path('voters/', include('voter_analytics.urls'))
+    path('admin/', admin.site.urls)
                                     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
