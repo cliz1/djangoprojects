@@ -367,12 +367,16 @@ def charts_view(request):
     today = date.today()
     if time_filter == '30days':
         start_date = today - timedelta(days=30)
+        time_title = " - Over the Last 30 Days"
     elif time_filter == '6months':
         start_date = today - timedelta(days=6*30)
+        time_title = " - Over the Last 6 Months"
     elif time_filter == '1year':
         start_date = today - timedelta(days=365)
+        time_title = " - Over the Last 1 year"
     else:
         start_date = datetime(1970, 1, 1)
+        time_title = ""
 
     # Annotate school levels dynamically
     students = Student.objects.annotate(
@@ -425,7 +429,7 @@ def charts_view(request):
             x=town_villages,
             y=service_hours,
             labels={'x': 'District', 'y': 'Service Hours'},
-            title='Service Hours by School District'
+            title='Service Hours by School District' + time_title
         )
         chart_html = fig1.to_html(full_html=False)
 
@@ -448,7 +452,7 @@ def charts_view(request):
         fig2 = px.pie(
             names=levels,
             values=level_hours,
-            title='Service Hours by School Level'
+            title='Service Hours by School Level' + time_title
         )
         chart_html = fig2.to_html(full_html=False)
 
@@ -464,7 +468,7 @@ def charts_view(request):
         fig3 = px.pie(
             names=client_countries,
             values=client_counts,
-            title='Clients by Country of Origin'
+            title='Clients by Country of Origin' + time_title
         )
         chart_html = fig3.to_html(full_html=False)
 
@@ -482,7 +486,7 @@ def charts_view(request):
         fig4 = px.pie(
             names=parent_countries,
             values=parent_counts,
-            title='Parents by Country of Origin'
+            title='Parents by Country of Origin' + time_title
         )
         chart_html = fig4.to_html(full_html=False)
 
@@ -504,7 +508,7 @@ def charts_view(request):
             x=session_subjects,
             y=subject_counts,
             labels={'x': 'Subject', 'y': 'Number of Tutoring Sessions'},
-            title='Number of Tutoring Sessions by Subject',
+            title='Number of Tutoring Sessions by Subject' + time_title
         )
         chart_html = fig5.to_html(full_html=False)
 
@@ -524,7 +528,7 @@ def charts_view(request):
             x=town_villages,
             y=tutoring_session_count,
             labels={'x': 'District', 'y': 'Tutoring Sessions'},
-            title='Tutoring Sessions by School District'
+            title='Tutoring Sessions by School District' + time_title
         )
         chart_html = fig6.to_html(full_html=False)
 
@@ -544,7 +548,7 @@ def charts_view(request):
             x=town_villages,
             y=advocacy_session_count,
             labels={'x': 'District', 'y': 'Advocacy Sessions'},
-            title='Advocacy Sessions by School District'
+            title='Advocacy Sessions by School District' + time_title
         )
         chart_html = fig7.to_html(full_html=False)
 
@@ -579,7 +583,7 @@ def charts_view(request):
             chart_data,
             x='range',
             y='count',
-            title='Number of Students by Total Hours Served',
+            title='Number of Students by Total Hours Served' + time_title,
             labels={'range': 'Hours Served', 'count': 'Number of Students'}
         )
 
