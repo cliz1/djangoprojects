@@ -16,7 +16,7 @@ class StudentSearchForm(forms.Form):
     time_period = forms.ChoiceField(
         choices=[
             ('', 'Any Time'),
-            ('2_weeks', 'Last 2 Weeks'),
+            ('30_days', 'Last 30 Days'),
             ('6_months', 'Last 6 Months'),
             ('1_year', 'Last 1 Year')
         ],
@@ -119,7 +119,7 @@ class ChartsFilterForm(forms.Form):
 
     time_range = forms.ChoiceField(
         choices=[
-            ('2weeks', 'Last 2 Weeks'),
+            ('30days', 'Last 30 Days'),
             ('6months', 'Last 6 Months'),
             ('1year', 'Last 1 Year'),
         ],

@@ -16,6 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
 from .forms import ParentSearchForm, StudentUpdateForm, StudentSearchForm, ParentUpdateForm, StudentForm, ParentForm, ChartsFilterForm
 import plotly.express as px
+from collections import Counter
+import re
 
 
 # Create your views here.
@@ -83,14 +85,14 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         )
 
         ## STUFF FOR TIME FILTERING
-        two_weeks_ago = today - timedelta(weeks=2)
+        thirty_days_ago = today - timedelta(days=30)
         six_months_ago = today - timedelta(days=6*30)  # Approx. 6 months
         one_year_ago = today - timedelta(days=365)
 
         # Students who received any service in the time range
-        context["students_in_last_two_weeks"] = Student.objects.filter(
-            Q(tutoring_sessions__date_of_contact__gte=two_weeks_ago) |
-            Q(advocacy_sessions__date_of_contact__gte=two_weeks_ago)
+        context["students_in_last_thirty_days"] = Student.objects.filter(
+            Q(tutoring_sessions__date_of_contact__gte=thirty_days_ago) |
+            Q(advocacy_sessions__date_of_contact__gte=thirty_days_ago)
         ).distinct().count()
 
         context["students_in_last_six_months"] = Student.objects.filter(
@@ -363,8 +365,8 @@ def charts_view(request):
 
     # Determine the time range
     today = date.today()
-    if time_filter == '2weeks':
-        start_date = today - timedelta(weeks=2)
+    if time_filter == '30days':
+        start_date = today - timedelta(days=30)
     elif time_filter == '6months':
         start_date = today - timedelta(days=6*30)
     elif time_filter == '1year':
@@ -486,17 +488,102 @@ def charts_view(request):
 
     # 5. Number of tutoring sessions by SUBJECT
     elif selected_chart == 'sessions_by_subject':
-        tutoring_data = tutoring_data.distinct().values('session_focus').annotate(count=Count('id'))
-        session_subjects = [entry['session_focus'] for entry in tutoring_data]
-        subject_counts = [entry['count'] for entry in tutoring_data]
+        raw_subjects = tutoring_data.values_list('session_focus', flat=True)
+
+        subject_counter = Counter()
+        for entry in raw_subjects:
+            if entry:
+                subjects = re.split(r'[/,]\s*', entry)
+                cleaned = [s.strip().capitalize() for s in subjects if s.strip()]
+                subject_counter.update(cleaned)
+
+        session_subjects = list(subject_counter.keys())
+        subject_counts = list(subject_counter.values())
 
         fig5 = px.bar(
-            x = session_subjects,
-            y = subject_counts,
+            x=session_subjects,
+            y=subject_counts,
             labels={'x': 'Subject', 'y': 'Number of Tutoring Sessions'},
-            title='Number of Tutoring Sessions by Subject'
+            title='Number of Tutoring Sessions by Subject',
         )
         chart_html = fig5.to_html(full_html=False)
+
+    # 6. Number of tutoring sessions by school district
+    elif selected_chart == 'tutoring_sessions_by_district':
+        tutoring_data = students.annotate(
+        tutoring_session_count=Count(
+            'tutoring_sessions',
+            filter=Q(tutoring_sessions__date_of_contact__gte=start_date)
+        )
+        ).values('town_village', 'tutoring_session_count').order_by('town_village')
+       
+        town_villages = [entry['town_village'] for entry in tutoring_data]
+        tutoring_session_count = [entry['tutoring_session_count'] for entry in tutoring_data]
+
+        fig6 = px.bar(
+            x=town_villages,
+            y=tutoring_session_count,
+            labels={'x': 'District', 'y': 'Tutoring Sessions'},
+            title='Tutoring Sessions by School District'
+        )
+        chart_html = fig6.to_html(full_html=False)
+
+    # 7. Number of advocacy sessions by school district
+    elif selected_chart == 'advocacy_sessions_by_district':
+        advocacy_data = students.annotate(
+        advocacy_session_count=Count(
+            'advocacy_sessions',
+            filter=Q(advocacy_sessions__date_of_contact__gte=start_date)
+        )
+        ).values('town_village', 'advocacy_session_count').order_by('town_village')
+       
+        town_villages = [entry['town_village'] for entry in advocacy_data]
+        advocacy_session_count = [entry['advocacy_session_count'] for entry in advocacy_data]
+
+        fig7 = px.bar(
+            x=town_villages,
+            y=advocacy_session_count,
+            labels={'x': 'District', 'y': 'Advocacy Sessions'},
+            title='Advocacy Sessions by School District'
+        )
+        chart_html = fig7.to_html(full_html=False)
+
+
+    # 8. Number of students by interval of number of hours served
+    elif selected_chart == 'students_by_service_interval':
+        students_with_hours = Student.objects.annotate(
+        total_hours=Sum(
+            Case(
+                When(tutoring_sessions__date_of_contact__gte=start_date, then=F('tutoring_sessions__length_of_session')),
+                When(advocacy_sessions__date_of_contact__gte=start_date, then=F('advocacy_sessions__length_of_contact')),
+                default=0,
+                output_field=FloatField()
+            )
+        )
+        )
+        binned_data = students_with_hours.aggregate(
+        under_5=Count('id', filter=Q(total_hours__lt=5)),
+        between_5_10=Count('id', filter=Q(total_hours__gte=5, total_hours__lt=10)),
+        between_10_20=Count('id', filter=Q(total_hours__gte=10, total_hours__lt=20)),
+        over_20=Count('id', filter=Q(total_hours__gte=20)))
+
+        chart_data = [
+            {'range': '0–5 hrs', 'count': binned_data['under_5']},
+            {'range': '5–10 hrs', 'count': binned_data['between_5_10']},
+            {'range': '10–20 hrs', 'count': binned_data['between_10_20']},
+            {'range': '20+ hrs', 'count': binned_data['over_20']},
+        ]
+
+        # Create bar chart
+        fig8 = px.bar(
+            chart_data,
+            x='range',
+            y='count',
+            title='Number of Students by Total Hours Served',
+            labels={'range': 'Hours Served', 'count': 'Number of Students'}
+        )
+
+        chart_html = fig8.to_html(full_html=False)
 
     # Convert plots to HTML
     context = {
