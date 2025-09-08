@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'project-demo-app-884f0cd6a1f7.herokuapp.com', 'risedb-152799309062.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'project-demo-app-884f0cd6a1f7.herokuapp.com', 'risedb-ddd576dd1008.herokuapp.com']
 
 
 # Application definition
