@@ -13,6 +13,7 @@ from django.db.models import Count, Q, Sum, F, FloatField, IntegerField
 from .models import Student, Parent, TutoringService, AdvocacyService
 from datetime import timedelta, date, datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
 from django.utils.timezone import now
 from .forms import ParentSearchForm, StudentUpdateForm, StudentSearchForm, ParentUpdateForm, StudentForm, ParentForm, ChartsFilterForm
 import plotly.express as px
@@ -43,6 +44,15 @@ GRADE_LABELS = {
 }
 
 
+# helper for home page:
+
+def families_served_count(last_n_days=30):
+    start_date = timezone.now().date() - timedelta(days=last_n_days)
+    return Parent.objects.filter(
+        Q(children__tutoring_sessions__date_of_contact__gte=start_date) |
+        Q(children__advocacy_sessions__date_of_contact__gte=start_date)
+    ).distinct().count()
+
 class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = "project/home.html"
 
@@ -63,22 +73,21 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         )
 
         grade_counts = (
-        Student.objects.values("current_grade")
-        .annotate(count=Count("id"))
-        .order_by("current_grade")
+            Student.objects.values("current_grade")
+            .annotate(count=Count("id"))
+            .order_by("current_grade")
         )
 
         # Map internal int grades to readable labels
         context["students_by_grade"] = [
             {
                 "grade": GRADE_LABELS.get(entry["current_grade"], str(entry["current_grade"])),
-                "count": entry["count"]
+                "count": entry["count"],
             }
             for entry in grade_counts
-]
+        ]
 
-        context["parents_by_town"] = (Parent.objects.values('town_village').annotate(count=Count('id')))
-
+        context["parents_by_town"] = Parent.objects.values("town_village").annotate(count=Count("id"))
         context["parents_by_country"] = (
             Parent.objects.values("country_of_origin")
             .annotate(count=Count("id"))
@@ -87,30 +96,35 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
         ## STUFF FOR TIME FILTERING
         thirty_days_ago = today - timedelta(days=30)
-        six_months_ago = today - timedelta(days=6*30)  # Approx. 6 months
+        six_months_ago = today - timedelta(days=6 * 30)  # Approx. 6 months
         one_year_ago = today - timedelta(days=365)
 
         # Students who received any service in the time range
         context["students_in_last_thirty_days"] = Student.objects.filter(
-            Q(tutoring_sessions__date_of_contact__gte=thirty_days_ago) |
-            Q(advocacy_sessions__date_of_contact__gte=thirty_days_ago)
+            Q(tutoring_sessions__date_of_contact__gte=thirty_days_ago)
+            | Q(advocacy_sessions__date_of_contact__gte=thirty_days_ago)
         ).distinct().count()
 
         context["students_in_last_six_months"] = Student.objects.filter(
-            Q(tutoring_sessions__date_of_contact__gte=six_months_ago) |
-            Q(advocacy_sessions__date_of_contact__gte=six_months_ago)
+            Q(tutoring_sessions__date_of_contact__gte=six_months_ago)
+            | Q(advocacy_sessions__date_of_contact__gte=six_months_ago)
         ).distinct().count()
 
         context["students_in_last_year"] = Student.objects.filter(
-            Q(tutoring_sessions__date_of_contact__gte=one_year_ago) |
-            Q(advocacy_sessions__date_of_contact__gte=one_year_ago)
+            Q(tutoring_sessions__date_of_contact__gte=one_year_ago)
+            | Q(advocacy_sessions__date_of_contact__gte=one_year_ago)
         ).distinct().count()
 
+        # Families served (NEW) — uses the helper to ensure a parent is counted
+        context["families_in_last_thirty_days"] = families_served_count(30)
+        context["families_in_last_six_months"] = families_served_count(6 * 30)
+        context["families_in_last_year"] = families_served_count(365)
+
         # New statistic: Total service hours
-        tutoring_hours = TutoringService.objects.aggregate(total_hours=Sum('length_of_session'))['total_hours'] or 0
-        advocacy_hours = AdvocacyService.objects.aggregate(total_hours=Sum('length_of_contact'))['total_hours'] or 0
-        context['tutoring_hours'] = tutoring_hours
-        context['advocacy_hours'] = advocacy_hours
+        tutoring_hours = TutoringService.objects.aggregate(total_hours=Sum("length_of_session"))["total_hours"] or 0
+        advocacy_hours = AdvocacyService.objects.aggregate(total_hours=Sum("length_of_contact"))["total_hours"] or 0
+        context["tutoring_hours"] = tutoring_hours
+        context["advocacy_hours"] = advocacy_hours
 
         return context
 

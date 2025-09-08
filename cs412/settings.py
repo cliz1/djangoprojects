@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', "theflyingstonecanteen-45ffd096eafa.herokuapp.com", 'project-demo-app-884f0cd6a1f7.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'project-demo-app-884f0cd6a1f7.herokuapp.com', 'risedb-152799309062.herokuapp.com']
 
 
 # Application definition

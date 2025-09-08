@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>NEDIS Client Database</h1>
+      <h1>RISE Client Database</h1>
 
       <!-- Logout Button -->
       <form method="post" action="{% url 'logout' %}">
@@ -28,8 +28,6 @@
         <a href="{% url 'parent_search' %}">Search Parents</a>
         <a href="{% url 'charts' %}">Charts</a>
       </div>
-
-      <h2>Client Statistics</h2>
 
       <!-- Stats Container for flexible layout -->
       <div class="stats-container">
@@ -52,7 +50,7 @@
 
         <!-- Number of Students by Country of Origin -->
         <div class="stat-list">
-          <h3>Country of Origin</h3>
+          <h3>Country of Origin (Students)</h3>
           <ul>
             {% for item in students_by_country %}
             <li>{{ item.country_of_origin }}: {{ item.count }}</li>
@@ -92,14 +90,26 @@
 
         <!-- Time Statistics -->
         <div class="stat-list">
-          <h3>Students Who Received Services</h3>
+          <h3>Students Served</h3>
           <ul>
             <li>In the last 30 days: {{ students_in_last_thirty_days }}</li>
             <li>In the last 6 months: {{ students_in_last_six_months }}</li>
             <li>In the last 1 year: {{ students_in_last_year }}</li>
           </ul>
         </div>
+
+        <!-- Families Served (new) -->
+        <div class="stat-list">
+          <h3>Families Served</h3>
+          <ul>
+            <li>In the last 30 days: {{ families_in_last_thirty_days }}</li>
+            <li>In the last 6 months: {{ families_in_last_six_months }}</li>
+            <li>In the last 1 year: {{ families_in_last_year }}</li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </body>
 </html>
+
