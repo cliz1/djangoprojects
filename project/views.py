@@ -9,7 +9,7 @@ from django.db.models import Case, When, Value, CharField
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView
-from django.db.models import Count, Q, Sum, F, FloatField
+from django.db.models import Count, Q, Sum, F, FloatField, IntegerField
 from .models import Student, Parent, TutoringService, AdvocacyService
 from datetime import timedelta, date, datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,7 +18,8 @@ from .forms import ParentSearchForm, StudentUpdateForm, StudentSearchForm, Paren
 import plotly.express as px
 from collections import Counter
 import re
-
+from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
+import pandas as pd
 
 # Create your views here.
 
@@ -588,6 +589,60 @@ def charts_view(request):
         )
 
         chart_html = fig8.to_html(full_html=False)
+    
+    # 9. Tutoring hours by student grade (at service time)
+    elif selected_chart == 'tutoring_hours_by_grade':
+        before_july_today = 1 if (today.month < 7 or (today.month == 7 and today.day < 1)) else 0
+        tutoring_data_with_grades = tutoring_data.annotate(
+        # Full years difference
+        years_diff=ExtractYear(Value(today)) - ExtractYear('date_of_contact'),
+
+        # 1 if the session happened before July 1 of its year, else 0
+        before_july_session=Case(
+            When(
+                Q(date_of_contact__month__lt=7) |
+                Q(date_of_contact__month=7, date_of_contact__day__lt=1),
+                then=Value(1)
+            ),
+            default=Value(0),
+            output_field=IntegerField()
+        ),
+
+        # Now count the number of July 1 boundaries crossed
+        num_july_firsts=(
+            F('years_diff') +
+            F('before_july_session') -
+            Value(before_july_today)
+        ),
+
+        # And finally compute the grade at service time
+        grade_at_service_time=F('student__current_grade') - F('num_july_firsts')
+        )
+        # Aggregate
+        grade_data = tutoring_data_with_grades.values('grade_at_service_time').annotate(
+            total_hours=Sum('length_of_session')
+        ).order_by('grade_at_service_time')
+
+        grades = [entry['grade_at_service_time'] for entry in grade_data]
+        grade_hours = [entry['total_hours'] for entry in grade_data]
+
+        df = pd.DataFrame({
+            'Grade': grades,
+            'Total Hours': grade_hours
+        })
+        df['Grade'] = pd.to_numeric(df['Grade'], errors='coerce')
+        df = df.sort_values(by='Grade')
+        print(df)
+
+        fig9 = px.bar(
+            df,
+            x='Grade',
+            y='Total Hours',
+            orientation = 'v',
+            labels={'Grade': 'Student Grade', 'Total Hours': 'Total Tutoring Hours'},
+            title='Tutoring Hours By Grade' + time_title
+        )
+        chart_html = fig9.to_html(full_html=False)
 
     # Convert plots to HTML
     context = {

@@ -7,12 +7,12 @@ from .models import Student, Parent
 from django.utils import timezone
 
 class StudentSearchForm(forms.Form):
-    # Create the fields
     search_name = forms.CharField(max_length=100, required=False, label="Search by Name")
-    country_of_origin = forms.ChoiceField(choices=[('', 'All')] + [(country, country) for country in Student.objects.values_list('country_of_origin', flat=True).distinct() if country is not None], required=False, label="Country of Origin")
-    current_grade = forms.ChoiceField(choices=[('', 'All')] + [(grade, grade) for grade in Student.objects.values_list('current_grade', flat=True).distinct()], required=False, label="Grade")
-    town_village = forms.ChoiceField(choices=[('', 'All')] + [(town, town) for town in Student.objects.values_list('town_village', flat=True).distinct()], required=False, label="School District")
-    #school_district = forms.ChoiceField(choices=[('', 'All')] + [(district, district) for district in Student.objects.values_list('school_district', flat=True).distinct()], required=False, label="School District")
+    # Define empty placeholders for fields to fill in __init__
+    country_of_origin = forms.ChoiceField(required=False, label="Country of Origin")
+    current_grade = forms.ChoiceField(required=False, label="Grade")
+    town_village = forms.ChoiceField(required=False, label="School District")
+
     time_period = forms.ChoiceField(
         choices=[
             ('', 'Any Time'),
@@ -24,18 +24,46 @@ class StudentSearchForm(forms.Form):
         label="Time Period"
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Dynamically generate choices from the database
+        self.fields['country_of_origin'].choices = [('', 'All')] + [
+            (country, country)
+            for country in Student.objects.values_list('country_of_origin', flat=True).distinct()
+            if country is not None
+        ]
+
+        self.fields['current_grade'].choices = [('', 'All')] + [
+            (grade, grade)
+            for grade in Student.objects.values_list('current_grade', flat=True).distinct()
+            if grade is not None
+        ]
+
+        self.fields['town_village'].choices = [('', 'All')] + [
+            (town, town)
+            for town in Student.objects.values_list('town_village', flat=True).distinct()
+            if town is not None
+        ]
+
 class ParentSearchForm(forms.Form):
     search_name = forms.CharField(max_length=100, required=False, label="Search by Name")
-    town_village = forms.ChoiceField(
-        choices=[('', 'All')] + [(town, town) for town in Parent.objects.values_list('town_village', flat=True).distinct()],
-        required=False,
-        label="Town/Village"
-    )
-    country_of_origin = forms.ChoiceField(
-        choices=[('', 'All')] + [(country, country) for country in Parent.objects.values_list('country_of_origin', flat=True).distinct()],
-        required=False,
-        label="Country of Origin"
-    )
+    town_village = forms.ChoiceField(required=False, label="Town/Village")
+    country_of_origin = forms.ChoiceField(required=False, label="Country of Origin")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        towns = Parent.objects.values_list('town_village', flat=True).distinct()
+        self.fields['town_village'].choices = [('', 'All')] + [
+            (town, town) for town in towns if town is not None
+        ]
+
+        countries = Parent.objects.values_list('country_of_origin', flat=True).distinct()
+        self.fields['country_of_origin'].choices = [('', 'All')] + [
+            (country, country) for country in countries if country is not None
+        ]
+
 
 class StudentUpdateForm(forms.ModelForm):
     class Meta:
