@@ -17,7 +17,7 @@ from django.utils import timezone
 from django.utils.timezone import now
 from .forms import ParentSearchForm, StudentUpdateForm, StudentSearchForm, ParentUpdateForm, StudentForm, ParentForm, ChartsFilterForm
 import plotly.express as px
-from collections import Counter
+from collections import Counter, defaultdict
 import re
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
 import pandas as pd
@@ -120,9 +120,13 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context["families_in_last_six_months"] = families_served_count(6 * 30)
         context["families_in_last_year"] = families_served_count(365)
 
-        # New statistic: Total service hours
-        tutoring_hours = TutoringService.objects.aggregate(total_hours=Sum("length_of_session"))["total_hours"] or 0
-        advocacy_hours = AdvocacyService.objects.aggregate(total_hours=Sum("length_of_contact"))["total_hours"] or 0
+        # New statistic: Total service hours (last 12 months)
+        tutoring_data = TutoringService.objects
+        advocacy_data = AdvocacyService.objects
+        tutoring_data = tutoring_data.filter(date_of_contact__gte=one_year_ago)
+        advocacy_data = advocacy_data.filter(date_of_contact__gte=one_year_ago)
+        tutoring_hours = tutoring_data.aggregate(total_hours=Sum("length_of_session"))["total_hours"] or 0
+        advocacy_hours = advocacy_data.aggregate(total_hours=Sum("length_of_contact"))["total_hours"] or 0
         context["tutoring_hours"] = tutoring_hours
         context["advocacy_hours"] = advocacy_hours
 
@@ -426,19 +430,29 @@ def charts_view(request):
 
     # 1. Service Hours by Town/Village (Bar Graph)
     if selected_chart == 'service_by_town':
-        service_data = students.annotate(
-            total_service_hours=Sum(
-                Case(
-                    When(tutoring_sessions__date_of_contact__gte=start_date, then=F('tutoring_sessions__length_of_session')),
-                    When(advocacy_sessions__date_of_contact__gte=start_date, then=F('advocacy_sessions__length_of_contact')),
-                    default=0,
-                    output_field=FloatField(),
-                )
-            )
-        ).values('town_village', 'total_service_hours').order_by('town_village')
+        tutoring_by_town = (
+        tutoring_data
+        .values('student__town_village')
+        .annotate(hours=Sum('length_of_session'))
+        )
 
-        town_villages = [entry['town_village'] for entry in service_data]
-        service_hours = [entry['total_service_hours'] for entry in service_data]
+        advocacy_by_town = (
+        advocacy_data
+        .values('student__town_village')
+        .annotate(hours=Sum('length_of_contact'))
+        )
+
+        service_totals = defaultdict(float)
+        for row in tutoring_by_town:
+            town = row['student__town_village'] or 'Unknown'
+            service_totals[town] += float(row['hours'] or 0)
+
+        for row in advocacy_by_town:
+            town = row['student__town_village'] or 'Unknown'
+            service_totals[town] += float(row['hours'] or 0)
+        
+        town_villages = sorted(service_totals.keys())
+        service_hours = [service_totals[town] for town in town_villages]
 
         fig1 = px.bar(
             x=town_villages,
