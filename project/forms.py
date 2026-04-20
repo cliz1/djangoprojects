@@ -124,6 +124,7 @@ class StudentForm(forms.ModelForm):
         self.fields['town_village'].label = 'School District'
         self.fields['country_of_origin'].label = 'Country of Origin'
         self.fields['parent'].label = 'Parent'
+        self.fields['parent'].queryset = self.fields['parent'].queryset.order_by('last_name', 'first_name') # order the parent list
         self.fields['email_address'].label = 'Email Address'
         self.fields['phone_number'].label = 'Phone Number'
 

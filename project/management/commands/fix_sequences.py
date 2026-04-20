@@ -8,9 +8,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         with connection.cursor() as cursor:
-            tables = ['project_parent']  # Add other tables as needed
+            tables = [
+                'project_parent',
+                'project_student',
+                # add any other tables in your app here
+            ]
             for table in tables:
-                self.stdout.write(f"Resetting sequence for table: {table}")
+                self.stdout.write(f"Resetting sequence for: {table}")
                 cursor.execute(f"""
                     SELECT setval(
                         pg_get_serial_sequence('"{table}"', 'id'),
@@ -18,4 +22,5 @@ class Command(BaseCommand):
                         true
                     );
                 """)
-            self.stdout.write(self.style.SUCCESS("Sequences reset successfully."))
+                self.stdout.write(self.style.SUCCESS(f"  ✓ {table}"))
+        self.stdout.write(self.style.SUCCESS("All sequences reset."))
